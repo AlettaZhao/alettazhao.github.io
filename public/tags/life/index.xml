@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Life on Xiaoxuan Zhao</title>
+    <link>http://localhost:1313/tags/life/</link>
+    <description>Recent content in Life on Xiaoxuan Zhao</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 15 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/life/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A Winter Afternoon in the Café</title>
+      <link>http://localhost:1313/blog/winter-cafe/</link>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/winter-cafe/</guid>
+      <description>The sky outside is the colour of lead. The heating has fogged the window. Someone at the next table draws a sun on the glass with a fingertip.</description>
+    </item>
+  </channel>
+</rss>

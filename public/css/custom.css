@@ -1,0 +1,367 @@
+/* ═══════════════════════════════════════════
+   Journal / Editorial Theme Override
+   for Hugo PaperMod
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+/* ── Color & Base ── */
+:root {
+    --theme: #f4f1ea;
+    --entry: #f4f1ea;
+    --primary: #181818;
+    --secondary: #505050;
+    --tertiary: #ece8dd;
+    --content: #181818;
+    --hljs-bg: #eae6dc;
+    --code-bg: #eae6dc;
+    --border: #c4bcad;
+    --gap: 28px;
+    --radius: 0;
+}
+
+/* Kill dark mode completely */
+.dark {
+    --theme: #f4f1ea;
+    --entry: #f4f1ea;
+    --primary: #181818;
+    --secondary: #505050;
+    --tertiary: #ece8dd;
+    --content: #181818;
+    --hljs-bg: #eae6dc;
+    --code-bg: #eae6dc;
+    --border: #c4bcad;
+}
+
+body {
+    font-family: 'Crimson Pro', Georgia, serif;
+    background: #f4f1ea;
+    color: #181818;
+    line-height: 1.78;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'onum' 1;
+}
+
+/* ── Header / Masthead ── */
+.nav {
+    max-width: 640px;
+    border-bottom: 0.5px solid #c4bcad;
+}
+
+.logo a,
+.logo {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+}
+
+#menu a {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* Hide dark mode toggle, search, and translations */
+#moon,
+#sun,
+.theme-toggle,
+#theme-toggle,
+button#theme-toggle,
+.nav .logo + div > button,
+.lang-switch {
+    display: none !important;
+}
+
+/* ── Main Layout ── */
+.main {
+    max-width: 640px;
+}
+
+/* ── Home Page / Profile ── */
+.first-entry {
+    border: none;
+    min-height: auto;
+}
+
+.home-info .entry-content {
+    font-size: 0.88rem;
+    color: #505050;
+    line-height: 1.75;
+}
+
+.home-info h1 {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1.55rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+}
+
+/* Social icons */
+.social-icons a {
+    color: #909090;
+    transition: color 0.2s;
+}
+
+.social-icons a:hover {
+    color: #8a2000;
+}
+
+/* ── Post List ── */
+.post-entry {
+    border-bottom: 0.5px solid #c4bcad;
+    border-radius: 0;
+    padding: 1.1rem 0;
+    margin: 0;
+}
+
+.post-entry:first-child {
+    border-top: 0.5px solid #c4bcad;
+}
+
+.post-entry:hover {
+    background: #ece8dd;
+    transform: none;
+}
+
+.entry-header h2 {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1.08rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+}
+
+.entry-content {
+    font-size: 0.82rem;
+    color: #505050;
+    line-height: 1.65;
+}
+
+.post-entry .entry-hint {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.72rem;
+    color: #909090;
+    letter-spacing: 0.05em;
+    font-variant-numeric: oldstyle-nums;
+}
+
+/* ── Post Meta (date, tags) ── */
+.post-meta {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 0.75rem;
+    color: #909090;
+    letter-spacing: 0.04em;
+    font-variant-numeric: oldstyle-nums;
+}
+
+/* Tags */
+.post-tags a {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.75rem;
+    color: #8a2000;
+    font-style: italic;
+    border: none;
+    padding: 0;
+    background: none;
+}
+
+.post-tags a:hover {
+    color: #181818;
+}
+
+/* ── Article Page ── */
+.post-title {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1.65rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.015em;
+    text-align: center;
+    margin-bottom: 0.3rem;
+}
+
+.post-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 0.5px solid #c4bcad;
+}
+
+.post-content {
+    font-size: 0.94rem;
+    line-height: 1.88;
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+}
+
+.post-content p {
+    margin-bottom: 1rem;
+}
+
+/* First letter drop cap */
+.post-content > p:first-of-type::first-letter {
+    font-family: 'Cormorant', serif;
+    font-size: 3.4rem;
+    float: left;
+    line-height: 0.72;
+    margin: 0.06em 0.08em 0 0;
+    color: #8a2000;
+    font-weight: 600;
+}
+
+/* Blockquotes */
+.post-content blockquote {
+    border-left: 1.5px solid #8a2000;
+    margin: 1.2rem 0;
+    padding: 0.1rem 0 0.1rem 1rem;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #505050;
+    background: none;
+}
+
+/* Headings in articles */
+.post-content h2 {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin: 2rem 0 0.6rem;
+    padding-bottom: 0.2rem;
+    border-bottom: 0.5px solid #c4bcad;
+}
+
+.post-content h3 {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 0.98rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    margin: 1.5rem 0 0.5rem;
+}
+
+/* Links in content */
+.post-content a {
+    color: #8a2000;
+    text-decoration: none;
+    border-bottom: 0.5px solid #c4bcad;
+    transition: border-color 0.2s;
+}
+
+.post-content a:hover {
+    border-bottom-color: #8a2000;
+}
+
+/* ── Single Pages (About, Works) ── */
+.page-header h1 {
+    font-family: 'EB Garamond', Georgia, serif;
+}
+
+/* ── Footer ── */
+.footer {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 0.72rem;
+    color: #909090;
+    letter-spacing: 0.04em;
+    font-variant-numeric: oldstyle-nums;
+    border-top: 0.5px solid #c4bcad;
+}
+
+.footer a {
+    color: #909090;
+}
+
+.footer a:hover {
+    color: #8a2000;
+}
+
+/* ── Breadcrumbs & Nav Links ── */
+.breadcrumbs a {
+    font-family: 'EB Garamond', serif;
+}
+
+.paginav {
+    border-top: 0.5px solid #c4bcad;
+}
+
+.paginav a {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.85rem;
+    color: #505050;
+}
+
+.paginav a:hover {
+    color: #8a2000;
+}
+
+/* ── Selection Color ── */
+::selection {
+    background: #8a2000;
+    color: #fff;
+}
+
+/* ── Scrollbar (Webkit) ── */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f4f1ea;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c4bcad;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #909090;
+}
+
+/* ── Remove rounded corners everywhere ── */
+.archive-entry,
+.post-entry,
+.terms-tags a,
+code {
+    border-radius: 0;
+}
+
+/* ── Code blocks ── */
+code {
+    font-size: 0.82rem;
+}
+
+/* ── Archive / List page ── */
+.archive-year-header {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #909090;
+}
+
+.archive-entry .entry-title {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.archive-entry .entry-hint {
+    font-family: 'EB Garamond', serif;
+    font-variant-numeric: oldstyle-nums;
+}
+
+/* ── Responsive tweaks ── */
+@media (max-width: 680px) {
+    .post-title {
+        font-size: 1.35rem;
+    }
+
+    .post-content > p:first-of-type::first-letter {
+        font-size: 2.8rem;
+    }
+}

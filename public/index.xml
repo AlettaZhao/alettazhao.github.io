@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Aletta Zhao</title>
+    <title>Xiaoxuan Zhao</title>
     <link>http://localhost:1313/</link>
-    <description>Recent content on Aletta Zhao</description>
+    <description>Recent content on Xiaoxuan Zhao</description>
     <generator>Hugo</generator>
     <language>en</language>
+    <lastBuildDate>Thu, 12 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Time Is a Snake Biting Its Own Tail</title>
+      <link>http://localhost:1313/blog/time-is-a-snake/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/time-is-a-snake/</guid>
+      <description>Márquez lays out a peculiar notion of time in the rise and fall of the Buendía family.</description>
+    </item>
+    <item>
+      <title>In Defence of Useless Knowledge</title>
+      <link>http://localhost:1313/blog/useless-knowledge/</link>
+      <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/useless-knowledge/</guid>
+      <description>Whenever someone asks what my studies are good for, I think of that tree in Zhuangzi.</description>
+    </item>
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/about/</guid>
+      <description>&lt;h2 id=&#34;education&#34;&gt;Education&lt;/h2&gt;&#xA;&lt;p&gt;&lt;strong&gt;Università di Bologna&lt;/strong&gt; · Ph.D. Candidate, Department of the Arts&#xA;INF/01 Computer Science&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Beijing Institute of Technology&lt;/strong&gt; · M.A. in Design, GPA 3.74/4.0&#xA;National Scholarship (Top 0.2%), First-Class Academic Scholarship&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Politecnico di Milano&lt;/strong&gt; · Exchange Program&#xA;Service Design and Innovation, Product Life Cycle Management&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>

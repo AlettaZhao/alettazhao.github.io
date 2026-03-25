@@ -1,0 +1,25 @@
+{{ define "main" }}
+
+<article>
+  <div class="art-hd">
+    <h1>{{ .Title }}</h1>
+    {{ if not .Params.hideDate }}
+    <time>{{ .Date.Format "2 January 2006" }}</time>
+    {{ end }}
+    {{ with .Params.tags }}
+    <div class="art-tags">{{ range . }}<a href="{{ "tags/" | absURL }}{{ . | urlize }}/">{{ . }}</a>{{ end }}</div>
+    {{ end }}
+  </div>
+  <div class="art-bd">
+    {{ .Content }}
+  </div>
+</article>
+
+{{ if and (eq .Section "blog") .Site.Params.showPostNav }}
+<nav class="post-nav">
+  {{ with .PrevInSection }}<a class="prev" href="{{ .Permalink }}">&larr; {{ .Title }}</a>{{ end }}
+  {{ with .NextInSection }}<a class="next" href="{{ .Permalink }}">{{ .Title }} &rarr;</a>{{ end }}
+</nav>
+{{ end }}
+
+{{ end }}

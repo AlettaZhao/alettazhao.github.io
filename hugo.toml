@@ -1,33 +1,28 @@
 baseURL = "https://alettazhao.github.io/"
 languageCode = "en"
-title = "Aletta Zhao"
-theme = "PaperMod"
+title = "Xiaoxuan Zhao"
+theme = "journal"
+summarylength = 40
 
 [params]
-  description = "Essays & Selected Works"
-  ShowReadingTime = false
-  ShowShareButtons = false
-  ShowPostNavLinks = true
-  ShowBreadCrumbs = false
-  defaultTheme = "light"
-
-[params.homeInfoParams]
-  Title = "Aletta Zhao"
-  Content = "Two or three sentences about yourself."
-
-[[params.socialIcons]]
-  name = "github"
-  url = "https://github.com/alettazhao"
-
-[[params.socialIcons]]
-  name = "email"
-  url = "mailto:you@example.com"
+  description = "Designer & Researcher"
+  affiliation = "Università di Bologna · Dipartimento delle Arti"
+  bio = "I consider myself a conceptual designer (though, to be honest, most of my projects are school assignments and haven't been put into practical application) and a design explorer (I enjoy experimenting with new design tools and methods, such as AI tools and emerging design theories)."
+  avatar = "images/avatar.png"
+  resumeURL = "files/resume.pdf"
+  showPostNav = true
+  socialEmail = "xiaoxuan.zhao2@unibo.it"
+  socialLinkedIn = "https://www.linkedin.com/in/%E5%B0%8F%E7%82%AB-%E8%B5%B5-734187314/"
+  socialGithub = "https://github.com/AlettaZhao"
+  socialHuggingFace = "https://huggingface.co/xiaoxuan222"
+  socialScholar = "https://scholar.google.com.hk/citations?user=W2kZ6F0AAAAJ&hl=zh-CN"
+  socialUnibo = "https://www.unibo.it/sitoweb/xiaoxuan.zhao2"
 
 [menu]
   [[menu.main]]
-    identifier = "writing"
-    name = "Writing"
-    url = "/posts/"
+    identifier = "about"
+    name = "About"
+    url = "/"
     weight = 1
   [[menu.main]]
     identifier = "works"
@@ -35,7 +30,7 @@ theme = "PaperMod"
     url = "/works/"
     weight = 2
   [[menu.main]]
-    identifier = "about"
-    name = "About"
-    url = "/about/"
+    identifier = "blog"
+    name = "Blog"
+    url = "/blog/"
     weight = 3

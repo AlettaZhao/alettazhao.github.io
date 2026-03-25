@@ -1,0 +1,58 @@
+{{ define "main" }}
+
+<section>
+  {{ if .Params.description }}
+  <p class="list-desc">{{ .Params.description }}</p>
+  {{ end }}
+
+  {{ $hasSeries := false }}
+  {{ range .Pages }}{{ with .Params.series }}{{ $hasSeries = true }}{{ end }}{{ end }}
+
+  {{ if $hasSeries }}
+    {{ $bySeries := .Pages.GroupByParam "series" }}
+    {{ range $bySeries }}
+    <div class="sec-h">{{ .Key }}</div>
+    <ul class="entries">
+      {{ range .Pages }}
+      <li class="entry">
+        <a href="{{ .Permalink }}">
+          <div class="entry-date">{{ .Date.Format "2 January 2006" }}{{ with .Params.tags }}{{ range first 1 . }}<span class="cat">{{ . }}</span>{{ end }}{{ end }}</div>
+          <div class="entry-title">{{ .Title }}</div>
+          <div class="entry-ex">{{ with .Params.summary }}{{ . }}{{ else }}{{ .Summary }}{{ end }}</div>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+    {{ end }}
+
+    {{ $noSeries := where .Pages "Params.series" nil }}
+    {{ if $noSeries }}
+    <div class="sec-h">Other</div>
+    <ul class="entries">
+      {{ range $noSeries }}
+      <li class="entry">
+        <a href="{{ .Permalink }}">
+          <div class="entry-date">{{ .Date.Format "2 January 2006" }}{{ with .Params.tags }}{{ range first 1 . }}<span class="cat">{{ . }}</span>{{ end }}{{ end }}</div>
+          <div class="entry-title">{{ .Title }}</div>
+          <div class="entry-ex">{{ with .Params.summary }}{{ . }}{{ else }}{{ .Summary }}{{ end }}</div>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+    {{ end }}
+  {{ else }}
+    <ul class="entries">
+      {{ range .Pages }}
+      <li class="entry">
+        <a href="{{ .Permalink }}">
+          <div class="entry-date">{{ .Date.Format "2 January 2006" }}{{ with .Params.tags }}{{ range first 1 . }}<span class="cat">{{ . }}</span>{{ end }}{{ end }}</div>
+          <div class="entry-title">{{ .Title }}</div>
+          <div class="entry-ex">{{ with .Params.summary }}{{ . }}{{ else }}{{ .Summary }}{{ end }}</div>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+  {{ end }}
+</section>
+
+{{ end }}

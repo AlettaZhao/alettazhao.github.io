@@ -1,0 +1,42 @@
+{{ define "main" }}
+
+{{ with .Site.Params }}
+<section class="home">
+  <div class="profile">
+    <div class="profile-photo">
+      {{ if $.Site.Params.avatar }}
+      <img src="{{ $.Site.Params.avatar | absURL }}" alt="{{ $.Site.Title }}">
+      {{ else }}
+      <div class="ph-placeholder"></div>
+      {{ end }}
+    </div>
+    <div class="profile-text">
+      <h2>{{ $.Site.Title }}</h2>
+      <div class="aff">{{ .affiliation }}</div>
+      <p class="bio">{{ .bio }}</p>
+      <div class="profile-links">
+        <div class="social-line">
+          {{ with .socialEmail }}<a href="mailto:{{ . }}">Email</a>{{ end }}
+          {{ with .socialLinkedIn }}<a href="{{ . }}">LinkedIn</a>{{ end }}
+          {{ with .socialGithub }}<a href="{{ . }}">GitHub</a>{{ end }}
+          {{ with .socialHuggingFace }}<a href="{{ . }}">HuggingFace</a>{{ end }}
+          {{ with .socialScholar }}<a href="{{ . }}">Scholar</a>{{ end }}
+          {{ with .socialUnibo }}<a href="{{ . }}">Unibo</a>{{ end }}
+        </div>
+        {{ with .resumeURL }}
+        <a class="resume-link" href="{{ . | absURL }}">↓ Download CV</a>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{ $about := .Site.GetPage "/about" }}
+{{ with $about }}
+<section class="about-cv">
+  {{ .Content }}
+</section>
+{{ end }}
+
+{{ end }}
