@@ -4,10 +4,17 @@ title = "Xiaoxuan Zhao"
 theme = "journal"
 summarylength = 40
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
 [params]
   description = "Designer & Researcher"
-  affiliation = "Università di Bologna · Dipartimento delle Arti"
-  bio = "I consider myself a conceptual designer (though, to be honest, most of my projects are school assignments and haven't been put into practical application) and a design explorer (I enjoy experimenting with new design tools and methods, such as AI tools and emerging design theories)."
+  affiliation = 'PhD candidate, <a class="aff-link" href="https://www.unibo.it/sitoweb/xiaoxuan.zhao2">Università di Bologna</a>'
+  bio = """I'm a question translator.
+
+Sometimes that means a research project—turning a question I keep returning to into an experiment that can actually answer it. Sometimes a tool—turning a need I've kept hitting into something people can use. And sometimes writing—turning an idea I can't put down into words that reach a reader."""
   avatar = "images/avatar.png"
   resumeURL = "files/resume.pdf"
   showPostNav = true
@@ -16,7 +23,6 @@ summarylength = 40
   socialGithub = "https://github.com/AlettaZhao"
   socialHuggingFace = "https://huggingface.co/xiaoxuan222"
   socialScholar = "https://scholar.google.com.hk/citations?user=W2kZ6F0AAAAJ&hl=zh-CN"
-  socialUnibo = "https://www.unibo.it/sitoweb/xiaoxuan.zhao2"
 
 [menu]
   [[menu.main]]

@@ -1,0 +1,10 @@
+<div class="edu-item">
+  <div class="edu-line">
+    <span class="edu-degree">{{ .Get "degree" }}</span>
+    <span class="edu-date">{{ .Get "date" }}</span>
+  </div>
+  <div class="edu-school">
+    {{ with .Get "url" }}<a href="{{ . }}">{{ $.Get "school" }}</a>{{ else }}{{ $.Get "school" }}{{ end }}{{ with .Get "detail" }} · {{ . }}{{ end }}
+  </div>
+  {{ with .Get "extra" }}<div class="edu-extra">{{ . }}</div>{{ end }}
+</div>

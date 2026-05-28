@@ -22,9 +22,24 @@
   <nav>
     <ul>
       
-      <li><a href="http://localhost:1313/">About</a></li>
+      
+      
+      
+        
+      
+      <li><a href="http://localhost:1313/" class="on">About</a></li>
+      
+      
+      
+      
+        
       
       <li><a href="http://localhost:1313/works/">Works</a></li>
+      
+      
+      
+      
+        
       
       <li><a href="http://localhost:1313/blog/">Blog</a></li>
       
@@ -42,23 +57,38 @@
       
       <img src="http://localhost:1313/images/avatar.png" alt="Xiaoxuan Zhao">
       
+      
+      <div class="cv-block">
+        <a class="resume-link" href="http://localhost:1313/files/resume.pdf">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+            <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+            <path d="M10 13H8"/>
+            <path d="M16 17H8"/>
+          </svg>
+          <span>Download CV</span>
+        </a>
+      </div>
+      
     </div>
     <div class="profile-text">
       <h2>Xiaoxuan Zhao</h2>
-      <div class="aff">Università di Bologna · Dipartimento delle Arti</div>
-      <p class="bio">I consider myself a conceptual designer (though, to be honest, most of my projects are school assignments and haven&#39;t been put into practical application) and a design explorer (I enjoy experimenting with new design tools and methods, such as AI tools and emerging design theories).</p>
+      <div class="aff">PhD candidate, <a class="aff-link" href="https://www.unibo.it/sitoweb/xiaoxuan.zhao2">Università di Bologna</a></div>
+      <div class="bio"><p>I&rsquo;m a question translator.</p>
+<p>Sometimes that means a research project—turning a question I keep returning to into an experiment that can actually answer it. Sometimes a tool—turning a need I&rsquo;ve kept hitting into something people can use. And sometimes writing—turning an idea I can&rsquo;t put down into words that reach a reader.</p>
+</div>
       <div class="profile-links">
         <div class="social-line">
           <a href="mailto:xiaoxuan.zhao2@unibo.it">Email</a>
-          <a href="https://www.linkedin.com/in/%E5%B0%8F%E7%82%AB-%E8%B5%B5-734187314/">LinkedIn</a>
-          <a href="https://github.com/AlettaZhao">GitHub</a>
-          <a href="https://huggingface.co/xiaoxuan222">HuggingFace</a>
+          <span>·</span>
           <a href="https://scholar.google.com.hk/citations?user=W2kZ6F0AAAAJ&amp;hl=zh-CN">Scholar</a>
-          <a href="https://www.unibo.it/sitoweb/xiaoxuan.zhao2">Unibo</a>
+          <span>·</span>
+          <a href="https://github.com/AlettaZhao">GitHub</a>
+          <span>·</span>
+          <a href="https://huggingface.co/xiaoxuan222">HuggingFace</a>
+          <span>·</span>
+          <a href="https://www.linkedin.com/in/%E5%B0%8F%E7%82%AB-%E8%B5%B5-734187314/">LinkedIn</a>
         </div>
-        
-        <a class="resume-link" href="http://localhost:1313/files/resume.pdf">↓ Download CV</a>
-        
       </div>
     </div>
   </div>
@@ -68,32 +98,106 @@
 
 
 <section class="about-cv">
-  <h2 id="education">Education</h2>
-<p><strong>Università di Bologna</strong> · Ph.D. Candidate, Department of the Arts
-INF/01 Computer Science</p>
-<p><strong>Beijing Institute of Technology</strong> · M.A. in Design, GPA 3.74/4.0
-National Scholarship (Top 0.2%), First-Class Academic Scholarship</p>
-<p><strong>Politecnico di Milano</strong> · Exchange Program
-Service Design and Innovation, Product Life Cycle Management</p>
-<p><strong>Hohai University</strong> · B.Eng. in Industrial Design, GPA 4.7/5.0
-Outstanding Graduate Scholarship (sole recipient in major)</p>
-<h2 id="selected-research">Selected Research</h2>
-<p><strong>CrossProbe: AI-Assisted Cross-Cultural Research Platform</strong>
-Developed a multi-agent AI platform for cross-cultural survey research. Led comparative experiments (n=30) and user research (n=30), achieving 80% reduction in preparation time and 98% usability satisfaction. First-author paper at HCII 2024, Best Paper Award. Second Prize in China Collegiate Computing Contest.</p>
-<p><strong>Generative AI in Design Practice</strong>
-Evaluated 30+ generative AI tools across text, code, image, and video domains. Coordinated a 12-day interdisciplinary workshop with 300+ participants and 10 completed AI-driven projects.</p>
-<h2 id="publication">Publication</h2>
-<p>Zhao, X. and Qiu, Y. (2024). Insight through dialogue: A practical exploration of AIGC in cross-cultural design research. In P. L. P. Rau, Ed., <em>Cross-Cultural Design. HCII 2024. LNCS, 14702</em>, Springer, Cham, 388–406. <a href="https://doi.org/10.1007/978-3-031-60913-8_27">DOI</a> · <strong>Best Paper Award</strong></p>
-<h2 id="selected-awards">Selected Awards</h2>
-<ul>
-<li>Golden Pin Concept Design Award — Nomination (Top 0.32%)</li>
-<li>HCI International 2024 — Best Paper (Top 1.4%)</li>
-<li>Spark Design Awards — Gold Winner</li>
-<li>European Product Design Award — Winner</li>
-<li>MUSE Design Awards — Silver Winner</li>
-<li>China Collegiate Computing Contest — Second Prize</li>
-<li>3rd Hong Kong Youth Design Award — Second Prize</li>
-</ul>
+  <h2 id="research">Research</h2>
+<h3 id="ai-in-cross-cultural-design-research">AI in Cross-cultural Design Research</h3>
+<p><span class="research-project">CrossProbe</span><br>
+HCII 2024 Best Paper Award</p>
+<p>Scaling design research with AI usually means flattening the cultural texture you came to study. CrossProbe is a multi-agent platform that runs interviews in each participant&rsquo;s language and cultural frame, treating cultural adaptation as part of the method rather than a post-hoc correction. Comparative experiments showed it preserved interview-level depth while cutting preparation time by 80%.</p>
+<h3 id="multisensory-memory-in-extended-reality">Multisensory Memory in Extended Reality</h3>
+<p><span class="research-project">Olfactory Cues in MR</span> — In progress</p>
+<p>Most XR training breaks at the moment the headset comes off: the sensory context of learning doesn&rsquo;t transfer to where the skill actually gets used. This study tests whether scent — the one modality that travels across both environments — can act as a memory anchor between them. Matched olfactory contexts produced significantly higher transfer accuracy and lower cognitive load than mismatched ones (n=48, 2×2 between-subjects).</p>
+<h2 id="tools">Tools</h2>
+<div class="projects-list">
+  <div class="project-item">
+    <div class="project-mark project-mark-travel" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 11a3 3 0 1 0 -3.973 2.839"/>
+        <path d="M11.76 21.47a1.991 1.991 0 0 1 -1.173 -.57l-4.244 -4.243a8 8 0 1 1 13.657 -5.588"/>
+        <path d="M18 22l3.35 -3.284a2.143 2.143 0 0 0 .005 -3.071a2.242 2.242 0 0 0 -3.129 -.006l-.224 .22l-.223 -.22a2.242 2.242 0 0 0 -3.128 -.006a2.143 2.143 0 0 0 -.006 3.071l3.355 3.296"/>
+      </svg>
+    </div>
+    <div class="project-copy">
+      <p class="project-title"><strong>ITtravel</strong> <span>&mdash; cultural travel companion for Italy</span></p>
+      <p>A travel app that lets you converse with simulated Italian cultural figures and complete on-site exploration tasks, turning sightseeing into a guided cultural encounter. <a href="https://ittravel.fdzmenu.com/">Try it</a></p>
+    </div>
+  </div>
+
+  <div class="project-item">
+    <div class="project-mark project-mark-meal" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 3v12h-5c-.023 -3.681 .184 -7.406 5 -12m0 12v6h-1v-3m-10 -14v17m-3 -17v3a3 3 0 1 0 6 0v-3"/>
+      </svg>
+    </div>
+    <div class="project-copy">
+      <p class="project-title"><strong>Fan Dazi (饭搭子)</strong> <span>&mdash; meal companion abroad</span></p>
+      <p>Eating abroad shouldn't mean ordering blind. Snap the menu, get the dishes identified and matched to your preferences, with prices totaled and a phrase ready to show the server in their language. <a href="https://fdzmenu.com/">Try it</a></p>
+    </div>
+  </div>
+
+  <div class="project-item">
+    <div class="project-mark project-mark-writing" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 9a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/>
+        <path d="M4 12v-5a3 3 0 1 1 6 0v5"/>
+        <path d="M4 9h6"/>
+        <path d="M20 6v6"/>
+        <path d="M4 16h12"/>
+        <path d="M4 20h6"/>
+        <path d="M14 20l2 2l5 -5"/>
+      </svg>
+    </div>
+    <div class="project-copy">
+      <p class="project-title"><strong>Polished (推敲)</strong> <span>&mdash; In development</span></p>
+      <p>Most AI writing tools help you write faster; Polished helps you write more precisely. It surfaces ambiguous word choices and classifies sentences by abstraction layer, slowing the writer down at the exact moments precision matters.</p>
+    </div>
+  </div>
+</div>
+
+<h2 id="publications">Publications</h2>
+<div class="pub-list">
+<div class="pub-item"><strong>Zhao, X.</strong>, Lai, M., Li, W., Li, S., Cascarano, P., &amp; Marfia, G. (2026). Bridging the expressiveness gap in cross-cultural co-creation through AI-augmented extended reality. <em>IEEE VR 2026 Workshops</em>, 519–523. <a href="https://ieeexplore.ieee.org/abstract/document/11489846">DOI</a></div>
+<div class="pub-item"><strong>Zhao, X.</strong>, &amp; Qiu, Y. (2024). Insight through dialogue: A practical exploration of AIGC in cross-cultural design research. In <em>Proceedings of HCI International 2024</em> (LNCS Vol. 14702, pp. 388–406). Springer. <a href="https://doi.org/10.1007/978-3-031-60913-8_27">DOI</a></div>
+</div>
+<h2 id="education">Education</h2>
+<div class="edu-item">
+  <div class="edu-line">
+    <span class="edu-degree">PhD in Computer Science</span>
+    <span class="edu-date">2025 – present</span>
+  </div>
+  <div class="edu-school">
+    <a href="https://www.unibo.it/sitoweb/xiaoxuan.zhao2">Università di Bologna</a> · Department of the Arts
+  </div>
+  
+</div>
+
+<div class="edu-item">
+  <div class="edu-line">
+    <span class="edu-degree">MA in Design</span>
+    <span class="edu-date">2022 – 2025</span>
+  </div>
+  <div class="edu-school">
+    Beijing Institute of Technology
+  </div>
+  <div class="edu-extra">Exchange student, Politecnico di Milano (2023)</div>
+</div>
+
+<div class="edu-item">
+  <div class="edu-line">
+    <span class="edu-degree">BEng in Industrial Design</span>
+    <span class="edu-date">2018 – 2022</span>
+  </div>
+  <div class="edu-school">
+    Hohai University
+  </div>
+  <div class="edu-extra">Outstanding Graduate, sole recipient in major</div>
+</div>
+
+<h2 id="selected-recognition">Selected Recognition</h2>
+<div class="recog-list">
+<div class="recog-item"><span class="recog-name">HCII 2024 Best Paper Award</span><span class="recog-qual">Top 1.4%</span></div>
+<div class="recog-item"><span class="recog-name">Golden Pin Concept Design Award Finalist</span><span class="recog-qual">Top 0.32%</span></div>
+<div class="recog-item"><span class="recog-name">European Product Design Award Winner</span><span class="recog-qual">2023</span></div>
+</div>
 
 </section>
 

@@ -21,7 +21,14 @@
   <nav>
     <ul>
       {{ range .Site.Menus.main }}
-      <li><a href="{{ .URL | absURL }}"{{ if $.IsMenuCurrent "main" . }} class="on"{{ end }}>{{ .Name }}</a></li>
+      {{ $url := relURL .URL }}
+      {{ $current := false }}
+      {{ if eq $url "/" }}
+        {{ $current = eq $.RelPermalink "/" }}
+      {{ else }}
+        {{ $current = hasPrefix $.RelPermalink $url }}
+      {{ end }}
+      <li><a href="{{ .URL | absURL }}"{{ if $current }} class="on"{{ end }}>{{ .Name }}</a></li>
       {{ end }}
     </ul>
   </nav>

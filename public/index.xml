@@ -27,7 +27,7 @@
       <link>http://localhost:1313/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/about/</guid>
-      <description>&lt;h2 id=&#34;education&#34;&gt;Education&lt;/h2&gt;&#xA;&lt;p&gt;&lt;strong&gt;Università di Bologna&lt;/strong&gt; · Ph.D. Candidate, Department of the Arts&#xA;INF/01 Computer Science&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Beijing Institute of Technology&lt;/strong&gt; · M.A. in Design, GPA 3.74/4.0&#xA;National Scholarship (Top 0.2%), First-Class Academic Scholarship&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Politecnico di Milano&lt;/strong&gt; · Exchange Program&#xA;Service Design and Innovation, Product Life Cycle Management&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;research&#34;&gt;Research&lt;/h2&gt;&#xA;&lt;h3 id=&#34;ai-in-cross-cultural-design-research&#34;&gt;AI in Cross-cultural Design Research&lt;/h3&gt;&#xA;&lt;p&gt;&lt;span class=&#34;research-project&#34;&gt;CrossProbe&lt;/span&gt;&lt;br&gt;&#xA;HCII 2024 Best Paper Award&lt;/p&gt;&#xA;&lt;p&gt;Scaling design research with AI usually means flattening the cultural texture you came to study. CrossProbe is a multi-agent platform that runs interviews in each participant&amp;rsquo;s language and cultural frame, treating cultural adaptation as part of the method rather than a post-hoc correction. Comparative experiments showed it preserved interview-level depth while cutting preparation time by 80%.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
