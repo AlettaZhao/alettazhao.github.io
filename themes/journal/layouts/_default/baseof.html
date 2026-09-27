@@ -4,10 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ if not .IsHome }}{{ .Title }} · {{ end }}{{ .Site.Title }}</title>
-<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+{{ $desc := cond .IsHome .Site.Params.description (or .Description .Params.summary .Site.Params.description) }}
+<meta name="description" content="{{ $desc }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:image" content="{{ with .Params.image }}{{ . | absURL }}{{ else }}{{ .Site.Params.avatar | absURL }}{{ end }}">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="{{ .Permalink }}">
+<link rel="icon" href="{{ "favicon.svg" | absURL }}" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ "css/style.css" | absURL }}">
+<link rel="stylesheet" href="{{ "css/style.css" | absURL }}?v={{ readFile "themes/journal/static/css/style.css" | md5 | truncate 8 "" }}">
 </head>
 <body>
 
@@ -38,7 +47,7 @@
   {{ block "main" . }}{{ end }}
 </main>
 
-<footer>&copy; {{ now.Year }} {{ .Site.Title }}</footer>
+<footer>&copy; {{ now.Year }} {{ .Site.Title }} · Updated {{ now.Format "January 2006" }}</footer>
 
 </body>
 </html>

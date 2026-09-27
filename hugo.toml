@@ -10,12 +10,12 @@ summarylength = 40
       unsafe = true
 
 [params]
-  description = "Designer & Researcher"
-  affiliation = 'PhD candidate, <a class="aff-link" href="https://www.unibo.it/sitoweb/xiaoxuan.zhao2">Università di Bologna</a>'
+  description = "Xiaoxuan Zhao is a PhD researcher in human–computer interaction at the University of Bologna, studying how multimodal AI and multisensory XR can support design communication across cultures."
+  affiliation = 'PhD researcher in Human–Computer Interaction, <a class="aff-link" href="https://www.unibo.it/sitoweb/xiaoxuan.zhao2">Università di Bologna</a>'
   bio = """I'm a question translator.
 
 Sometimes that means a research project—turning a question I keep returning to into an experiment that can actually answer it. Sometimes a tool—turning a need I've kept hitting into something people can use. And sometimes writing—turning an idea I can't put down into words that reach a reader."""
-  avatar = "images/avatar.png"
+  avatar = "images/avatar.jpg"
   resumeURL = "files/resume.pdf"
   showPostNav = true
   socialEmail = "xiaoxuan.zhao2@unibo.it"
@@ -23,6 +23,7 @@ Sometimes that means a research project—turning a question I keep returning to
   socialGithub = "https://github.com/AlettaZhao"
   socialHuggingFace = "https://huggingface.co/xiaoxuan222"
   socialScholar = "https://scholar.google.com.hk/citations?user=W2kZ6F0AAAAJ&hl=zh-CN"
+  socialORCID = "https://orcid.org/0009-0001-7084-7990"
 
 [menu]
   [[menu.main]]

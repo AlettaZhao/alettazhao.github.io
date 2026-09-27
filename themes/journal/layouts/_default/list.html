@@ -5,6 +5,10 @@
   <p class="list-desc">{{ .Params.description }}</p>
   {{ end }}
 
+  {{ if eq .Section "works" }}<script>document.documentElement.classList.add('js')</script>{{ end }}
+  {{ with .Content }}<div class="list-body">{{ . }}</div>{{ end }}
+  {{ if eq .Section "works" }}<script src="{{ "js/works.js" | absURL }}?v={{ readFile "themes/journal/static/js/works.js" | md5 | truncate 8 "" }}" defer></script>{{ end }}
+
   {{ $hasSeries := false }}
   {{ range .Pages }}{{ with .Params.series }}{{ $hasSeries = true }}{{ end }}{{ end }}
 
@@ -12,6 +16,7 @@
     {{ $bySeries := .Pages.GroupByParam "series" }}
     {{ range $bySeries }}
     <div class="sec-h">{{ .Key }}</div>
+    {{ $key := lower .Key }}{{ with $.Params.seriesIntro }}{{ with index . $key }}<p class="series-intro">{{ . }}</p>{{ end }}{{ end }}
     <ul class="entries">
       {{ range .Pages }}
       <li class="entry">

@@ -1,0 +1,47 @@
+{{/* Usage:
+{{< work title="Name" year="2025" tag="Award or venue<br>Second line" video="files/works/demo.mp4" poster="images/works/demo.jpg" images="images/works/a.jpg, images/works/b.jpg" role="My role" link="https://..." linktext="Paper" >}}
+One to three sentences about the project.
+{{< /work >}}
+The video (or the first image) fills the stage; extra images become thumbnails that swap into it.
+Add |contain after an image path (diagrams, square art) to show it whole instead of cropped to 16:9. */}}
+{{ $imgs := slice }}
+{{ with .Get "images" }}{{ range split . "," }}{{ $imgs = $imgs | append (trim . " ") }}{{ end }}{{ end }}
+{{ $video := .Get "video" }}
+{{ $n := .Page.Scratch.Get "workN" | default 0 | add 1 }}
+{{ .Page.Scratch.Set "workN" $n }}
+{{ $thumbs := $imgs }}
+{{ if and $video $imgs }}{{ $thumbs = slice (.Get "poster") | append $imgs }}{{ end }}
+<article class="work-item reveal" id="{{ .Get "title" | urlize }}">
+  <div class="work-stage">
+    {{ if $video }}
+    <video class="work-main is-video" src="{{ $video | absURL }}"{{ with .Get "poster" }} poster="{{ . | absURL }}"{{ end }} muted loop playsinline controls preload="none"></video>
+    {{ else if $imgs }}
+    {{ $first := split (index $imgs 0) "|" }}
+    <img class="work-main{{ if gt (len $first) 1 }} is-contain{{ end }}" src="{{ index $first 0 | absURL }}" alt="{{ .Get "title" }}" loading="lazy">
+    {{ else }}
+    <div class="work-main work-ph"><span>Video &amp; images coming soon</span></div>
+    {{ end }}
+  </div>
+  {{ if gt (len $thumbs) 1 }}
+  <div class="work-thumbs">
+    {{ range $i, $src := $thumbs }}
+    {{ $parts := split $src "|" }}{{ $path := index $parts 0 }}
+    <button type="button" class="work-thumb{{ if eq $i 0 }} is-active{{ end }}" data-src="{{ $path | absURL }}"{{ if gt (len $parts) 1 }} data-fit="contain"{{ end }}{{ if and $video (eq $i 0) }} data-video{{ end }} aria-label="Show image {{ add $i 1 }}"><img src="{{ $path | absURL }}" alt="" loading="lazy"></button>
+    {{ end }}
+  </div>
+  {{ end }}
+  <div class="work-caption">
+    <div class="work-head">
+      <span class="work-num">{{ printf "%02d" $n }}</span>
+      <h3 class="work-title">{{ .Get "title" }}</h3>
+      {{ with .Get "year" }}<div class="work-year">{{ . }}</div>{{ end }}
+    </div>
+    <div class="work-body">
+      {{ with .Get "tag" }}<div class="work-tag">{{ . | safeHTML }}</div>{{ end }}
+      <div class="work-text">{{ .Inner | markdownify }}</div>
+      {{ with .Get "role" }}<div class="work-role"><span>My role</span> {{ . }}</div>{{ end }}
+      {{ with .Get "team" }}<div class="work-role"><span>Team</span> {{ . }}</div>{{ end }}
+      {{ with .Get "link" }}<div class="work-link"><a href="{{ . }}">{{ or ($.Get "linktext") "Visit" }} <span aria-hidden="true">→</span></a></div>{{ end }}
+    </div>
+  </div>
+</article>
