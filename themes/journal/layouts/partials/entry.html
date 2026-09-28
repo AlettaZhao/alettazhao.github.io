@@ -1,0 +1,11 @@
+{{ $thumb := or .Params.thumb .Params.image }}
+<li class="entry{{ if $thumb }} has-thumb{{ end }}">
+  <a href="{{ .Permalink }}">
+    <div class="entry-copy">
+      <div class="entry-date">{{ .Date.Format "2 January 2006" }}{{ with .Params.tags }}{{ range first 1 . }}<span class="cat">{{ . }}</span>{{ end }}{{ end }}</div>
+      <div class="entry-title">{{ .Title }}</div>
+      <div class="entry-ex">{{ with .Params.summary }}{{ . }}{{ else }}{{ .Summary }}{{ end }}</div>
+    </div>
+    {{ with $thumb }}<div class="entry-thumb"><img src="{{ . | absURL }}" alt="" loading="lazy"></div>{{ end }}
+  </a>
+</li>

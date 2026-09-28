@@ -1,4 +1,5 @@
 ---
+aliases: ["/blog/a-cover-without-a-picture/"]
 title: "A Cover Without a Picture"
 date: 2026-04-10
 tags: ["design"]
@@ -10,7 +11,7 @@ summary: "Spotted at Venice airport: a magazine cover with no image at all. Why 
 <div class="ds-kicker">Design Sampling · 01</div>
 
 <figure class="ds-fig ds-narrow">
-  <img src="/images/blog/ds01-cover.jpg" alt="Cover of intime magazine, March–April 2026: rows of 'intime' followed by section names, set in champagne serif type on a teal gradient">
+  <img loading="lazy" decoding="async" src="/images/blog/ds01-cover.jpg" alt="Cover of intime magazine, March–April 2026: rows of 'intime' followed by section names, set in champagne serif type on a teal gradient">
   <figcaption><em>intime</em>, March–April 2026 · the magazine of Venice Marco Polo Airport</figcaption>
 </figure>
 
@@ -35,16 +36,16 @@ A large field of saturated teal, finished with a reflective laminate. In the gre
 <div class="ds-whatif">
   <div class="ds-whatif-label">What if…</div>
   <div class="ds-grid ds-grid-3">
-    <figure><img src="/images/blog/ds01-if-flat.jpg" alt="The cover with a flat teal background"><figcaption>…the background had no gradient</figcaption></figure>
-    <figure><img src="/images/blog/ds01-if-orange.jpg" alt="The cover with pure orange type"><figcaption>…the type were pure orange</figcaption></figure>
-    <figure><img src="/images/blog/ds01-if-noaccent.jpg" alt="The cover without white accent text"><figcaption>…there were no accent colour</figcaption></figure>
+    <figure><img loading="lazy" decoding="async" src="/images/blog/ds01-if-flat.jpg" alt="The cover with a flat teal background"><figcaption>…the background had no gradient</figcaption></figure>
+    <figure><img loading="lazy" decoding="async" src="/images/blog/ds01-if-orange.jpg" alt="The cover with pure orange type"><figcaption>…the type were pure orange</figcaption></figure>
+    <figure><img loading="lazy" decoding="async" src="/images/blog/ds01-if-noaccent.jpg" alt="The cover without white accent text"><figcaption>…there were no accent colour</figcaption></figure>
   </div>
 </div>
 
 ## Type
 
 <figure class="ds-fig ds-narrow">
-  <img src="/images/blog/ds01-type.jpg" alt="The cover on black, isolating the typography">
+  <img loading="lazy" decoding="async" src="/images/blog/ds01-type.jpg" alt="The cover on black, isolating the typography">
 </figure>
 
 **Headline: Linotype Didot Pro.** A high-contrast serif with built-in fashion-magazine glamour. It <mark>sets the tone</mark> for the whole cover.
@@ -54,7 +55,7 @@ A large field of saturated teal, finished with a reflective laminate. In the gre
 **Size contrast.** The jump in size between headline and supporting text is bold, so the <mark>hierarchy</mark> is obvious at a glance. The small text is pushed to the edge of visibility: it never competes with the headline, but it's there when you look for it.
 
 <figure class="ds-fig ds-inline">
-  <img src="/images/blog/ds01-in.jpg" alt="The letters 'in' in italic and in regular">
+  <img loading="lazy" decoding="async" src="/images/blog/ds01-in.jpg" alt="The letters 'in' in italic and in regular">
 </figure>
 
 **One word, two styles.** On every line, the "in" is set in italic and the rest of the word in regular. You may not consciously notice it, but it's exactly this <mark>subtle variation</mark> that makes the cover feel <mark>refined</mark>.
@@ -62,11 +63,11 @@ A large field of saturated teal, finished with a reflective laminate. In the gre
 <div class="ds-whatif">
   <div class="ds-whatif-label">What if…</div>
   <div class="ds-rows">
-    <figure><img src="/images/blog/ds01-type-serif.jpg" alt=""><figcaption>…only a serif were used</figcaption></figure>
-    <figure><img src="/images/blog/ds01-type-sans.jpg" alt=""><figcaption>…only a sans-serif were used</figcaption></figure>
-    <figure><img src="/images/blog/ds01-type-noitalic.jpg" alt=""><figcaption>…there were no italic–regular switch</figcaption></figure>
-    <figure><img src="/images/blog/ds01-type-small-diff.jpg" alt=""><figcaption>…the size difference were too small</figcaption></figure>
-    <figure><img src="/images/blog/ds01-type-big-diff.jpg" alt=""><figcaption>…the size difference were too large</figcaption></figure>
+    <figure><img loading="lazy" decoding="async" src="/images/blog/ds01-type-serif.jpg" alt=""><figcaption>…only a serif were used</figcaption></figure>
+    <figure><img loading="lazy" decoding="async" src="/images/blog/ds01-type-sans.jpg" alt=""><figcaption>…only a sans-serif were used</figcaption></figure>
+    <figure><img loading="lazy" decoding="async" src="/images/blog/ds01-type-noitalic.jpg" alt=""><figcaption>…there were no italic–regular switch</figcaption></figure>
+    <figure><img loading="lazy" decoding="async" src="/images/blog/ds01-type-small-diff.jpg" alt=""><figcaption>…the size difference were too small</figcaption></figure>
+    <figure><img loading="lazy" decoding="async" src="/images/blog/ds01-type-big-diff.jpg" alt=""><figcaption>…the size difference were too large</figcaption></figure>
   </div>
 </div>
 
@@ -81,7 +82,7 @@ A large field of saturated teal, finished with a reflective laminate. In the gre
 ## Logos and balance
 
 <figure class="ds-fig ds-narrow">
-  <img src="/images/blog/ds01-logos.jpg" alt="The cover with the headline dimmed, leaving the two logos and the small text visible">
+  <img loading="lazy" decoding="async" src="/images/blog/ds01-logos.jpg" alt="The cover with the headline dimmed, leaving the two logos and the small text visible">
 </figure>
 
 **Magazine logo, right.** A white circle with "intime" set vertically, near the horizontal midline. The circle breaks the straight lines of the page, and the reading direction turns from horizontal to vertical: a <mark>visual surprise</mark> inside a regular rhythm.

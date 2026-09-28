@@ -6,5 +6,6 @@
   <div class="edu-school">
     {{ with .Get "url" }}<a href="{{ . }}">{{ $.Get "school" }}</a>{{ else }}{{ $.Get "school" }}{{ end }}{{ with .Get "detail" }} · {{ . }}{{ end }}
   </div>
+  {{ with .Get "advisor" }}<div class="edu-advisor">{{ . }}</div>{{ end }}
   {{ with .Get "extra" }}<div class="edu-extra">{{ . }}</div>{{ end }}
 </div>

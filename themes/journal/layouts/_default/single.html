@@ -15,7 +15,7 @@
   </div>
 </article>
 
-{{ if and (eq .Section "blog") .Site.Params.showPostNav }}
+{{ if and (eq .Section "writing") .Site.Params.showPostNav }}
 <nav class="post-nav">
   {{ with .PrevInSection }}<a class="prev" href="{{ .Permalink }}">&larr; {{ .Title }}</a>{{ end }}
   {{ with .NextInSection }}<a class="next" href="{{ .Permalink }}">{{ .Title }} &rarr;</a>{{ end }}

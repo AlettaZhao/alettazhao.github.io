@@ -1,4 +1,5 @@
 ---
+aliases: ["/blog/then-dont-design-it/"]
 title: "Then Don't Design It"
 date: 2026-04-24
 tags: ["design"]
@@ -17,7 +18,7 @@ summary: "An invitation that must be rebellious without saying so, formal but no
 Maison Martin Margiela's show invitations rarely take the form of a letter. Sometimes the invitation is a plate, sometimes a Rubik's cube, sometimes a raincoat…
 
 <figure class="ds-fig">
-  <img src="/images/blog/ds02-objects.jpg" alt="Three Margiela invitations: a printed plate, a Rubik's cube and a plastic raincoat">
+  <img loading="lazy" decoding="async" src="/images/blog/ds02-objects.jpg" alt="Three Margiela invitations: a printed plate, a Rubik's cube and a plastic raincoat">
 </figure>
 
 When we talk about designing an invitation, we shouldn't limit ourselves to designing a piece of mail. Anything can be an invitation. **What is really being designed is the interaction between the guest and the "invitation".**
@@ -60,7 +61,7 @@ Margiela and his business partner Jenny Meirens spent nearly a year preparing th
 ## The answer: a telegram
 
 <figure class="ds-fig">
-  <img src="/images/blog/ds02-telegram.jpg" alt="The telegram invitation to Maison Martin Margiela's first show, with its blue envelope">
+  <img loading="lazy" decoding="async" src="/images/blog/ds02-telegram.jpg" alt="The telegram invitation to Maison Martin Margiela's first show, with its blue envelope">
 </figure>
 
 Maison Martin Margiela's debut invitation went out to the fashion world <mark>as a telegram</mark>.
@@ -74,17 +75,17 @@ Finally, a conventional invitation spends its money on what is seen: layout, pri
 ## Later invitations
 
 <figure class="ds-fig ds-narrow">
-  <img src="/images/blog/ds02-ss1990.jpg" alt="Children on the runway at the S/S 1990 show, and eight hand-drawn cardboard invitations">
+  <img loading="lazy" decoding="async" src="/images/blog/ds02-ss1990.jpg" alt="Children on the runway at the S/S 1990 show, and eight hand-drawn cardboard invitations">
   <figcaption><strong>S/S 1990.</strong> The show was held in a children's playground, so the invitations were hand-drawn by 500 children.</figcaption>
 </figure>
 
 <figure class="ds-fig ds-narrow">
-  <img src="/images/blog/ds02-aw2012.jpg" alt="Three A/W 2012 looks, a small torch keyring, and the show details projected as a circle of light">
+  <img loading="lazy" decoding="async" src="/images/blog/ds02-aw2012.jpg" alt="Three A/W 2012 looks, a small torch keyring, and the show details projected as a circle of light">
   <figcaption><strong>A/W 2012.</strong> A collection full of visual tricks and trompe-l'œil, the seen and the hidden. The invitation was a torch: the show details only appeared when you shone it in the dark.</figcaption>
 </figure>
 
 <figure class="ds-fig">
-  <img src="/images/blog/ds02-artisanal2024.jpg" alt="Three Artisanal 2024 looks, and an invitation card with a Paris metro ticket attached">
+  <img loading="lazy" decoding="async" src="/images/blog/ds02-artisanal2024.jpg" alt="Three Artisanal 2024 looks, and an invitation card with a Paris metro ticket attached">
   <figcaption><strong>Artisanal 2024.</strong> A collection about people who come alive underground at night, so the invitation was a metro ticket.</figcaption>
 </figure>
 

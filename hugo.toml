@@ -22,7 +22,7 @@ Sometimes that means a research project—turning a question I keep returning to
   socialLinkedIn = "https://www.linkedin.com/in/%E5%B0%8F%E7%82%AB-%E8%B5%B5-734187314/"
   socialGithub = "https://github.com/AlettaZhao"
   socialHuggingFace = "https://huggingface.co/xiaoxuan222"
-  socialScholar = "https://scholar.google.com.hk/citations?user=W2kZ6F0AAAAJ&hl=zh-CN"
+  socialScholar = "https://scholar.google.com/citations?user=W2kZ6F0AAAAJ&hl=en"
   socialORCID = "https://orcid.org/0009-0001-7084-7990"
 
 [menu]
@@ -32,12 +32,12 @@ Sometimes that means a research project—turning a question I keep returning to
     url = "/"
     weight = 1
   [[menu.main]]
-    identifier = "works"
-    name = "Works"
-    url = "/works/"
+    identifier = "work"
+    name = "Work"
+    url = "/work/"
     weight = 2
   [[menu.main]]
-    identifier = "blog"
-    name = "Blog"
-    url = "/blog/"
+    identifier = "writing"
+    name = "Writing"
+    url = "/writing/"
     weight = 3

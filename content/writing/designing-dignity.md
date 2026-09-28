@@ -1,8 +1,10 @@
 ---
+aliases: ["/blog/designing-dignity/"]
 title: "Designing Dignity"
 date: 2026-05-08
 tags: ["design"]
 image: "images/blog/ds03-tickets.jpg"
+thumb: "images/blog/ds03-five.jpg"
 series: "Design Sampling"
 summary: "Two Milan metro tickets do exactly the same job. One goes in the bin, the other goes home in your wallet. Why?"
 ---
@@ -10,7 +12,7 @@ summary: "Two Milan metro tickets do exactly the same job. One goes in the bin, 
 <div class="ds-kicker">Design Sampling · 03</div>
 
 <figure class="ds-fig">
-  <img src="/images/blog/ds03-tickets.jpg" alt="Left: a Milan ATM paper metro ticket. Right: the reloadable 'ricaricami' card with Milano Cortina 2026 logos">
+  <img loading="lazy" decoding="async" src="/images/blog/ds03-tickets.jpg" alt="Left: a Milan ATM paper metro ticket. Right: the reloadable 'ricaricami' card with Milano Cortina 2026 logos">
   <figcaption><strong>Left:</strong> a standard Milan metro paper ticket. <strong>Right:</strong> the reloadable card issued for the Milano Cortina 2026 Winter Olympics.</figcaption>
 </figure>
 
@@ -29,7 +31,7 @@ Below, I break down <mark>four dimensions</mark> of <mark>how designers build di
 <p class="ds-principle"><span>Principle</span> An object begins to have dignity when it is allowed to have something extra.</p>
 
 <figure class="ds-fig">
-  <img src="/images/blog/ds03-anatomy.jpg" alt="Annotated tickets: every element on the paper ticket is functional; the card adds a name, logos and a green band">
+  <img loading="lazy" decoding="async" src="/images/blog/ds03-anatomy.jpg" alt="Annotated tickets: every element on the paper ticket is functional; the card adds a name, logos and a green band">
 </figure>
 
 On the paper ticket, not a single element is extra. Every element is a legal or functional requirement: ticket type, fare, where it's valid, restrictions. Its design freedom is zero. That's not to say nobody paid for the design; it means the designer had no room to decide anything. Everything on it is something it *must* have; nothing is something it *may* have.
@@ -47,7 +49,7 @@ Usually that isn't the designer's failure but a decision made by the system. Who
 <p class="ds-principle"><span>Principle</span> For an object to have dignity, someone must have seriously rethought it at least once.</p>
 
 <figure class="ds-fig">
-  <img src="/images/blog/ds03-ordinario.jpg" alt="Front and back of an older ATM paper ticket, almost identical in design">
+  <img loading="lazy" decoding="async" src="/images/blog/ds03-ordinario.jpg" alt="Front and back of an older ATM paper ticket, almost identical in design">
 </figure>
 
 The paper ticket's material, printing and dimensions have barely changed in nearly twenty years (2006 to 2025). Its bare-bones look is less a design decision than inertia: nobody thought it worth redesigning.
@@ -61,7 +63,7 @@ Many objects lose their dignity not because they were badly designed, but becaus
 <p class="ds-principle"><span>Principle</span> Through the tone of its text, an object defines the power relationship with the person using it.</p>
 
 <figure class="ds-fig">
-  <img src="/images/blog/ds03-voice.jpg" alt="Text on the tickets: 'NON VALIDO per RHO FIERA', 'NON PIEGARE IL BIGLIETTO E NON AVVICINARLO A FONTI MAGNETICHE', and 'ricaricami'">
+  <img loading="lazy" decoding="async" src="/images/blog/ds03-voice.jpg" alt="Text on the tickets: 'NON VALIDO per RHO FIERA', 'NON PIEGARE IL BIGLIETTO E NON AVVICINARLO A FONTI MAGNETICHE', and 'ricaricami'">
 </figure>
 
 This is a design dimension that rarely gets discussed.
@@ -77,7 +79,7 @@ When an object is covered in prohibitions and negatives, what it's really saying
 <p class="ds-principle"><span>Principle</span> Dignity needs recognisability, but recognisability is not decoration.</p>
 
 <figure class="ds-fig ds-narrow">
-  <img src="/images/blog/ds03-five.jpg" alt="Five old ATM paper tickets laid out together, nearly indistinguishable">
+  <img loading="lazy" decoding="async" src="/images/blog/ds03-five.jpg" alt="Five old ATM paper tickets laid out together, nearly indistinguishable">
 </figure>
 
 Put five old tickets side by side and you have to read the text carefully to tell what each one is for. Visually they are almost the same object; the differences live entirely in the text. These tickets have no "face". They are anonymous, indistinguishable from one another.
@@ -96,7 +98,7 @@ Recognisability can come from a colour system, from proportions, from the choice
 
 ## A last thought: does dignity have an ethical limit?
 
-The card's Olympic co-branding gives it the quality of a souvenir: you went to the Milan Olympics, and you brought this card home. Which means part of its dignity comes from the brand value of a commercial event.
+The card's Olympic co-branding gives it the quality of a souvenir: you went to the Milan Olympics, and you brought this card home. That means part of its dignity comes from the brand value of a commercial event.
 
 That raises a question. Without the Olympic logos, how much design "decency" would the card have left? If not much, is its dignity its own, or borrowed?
 
