@@ -148,7 +148,12 @@
     <a href="https://orcid.org/0009-0001-7084-7990">ORCID</a>
   </nav>
 
-  <p class="foot reveal" style="animation-delay:.95s">You got here by tapping my phone. Hi 👋</p>
+  <p class="foot reveal" id="via" style="animation-delay:.95s">You got here by scanning my code. Hi 👋</p>
 </main>
+<script>
+  // NFC tags can point to /ismar/?via=tap; the QR code uses the plain URL.
+  if (new URLSearchParams(location.search).get("via") === "tap")
+    document.getElementById("via").textContent = "You got here by tapping my phone. Hi 👋";
+</script>
 </body>
 </html>
