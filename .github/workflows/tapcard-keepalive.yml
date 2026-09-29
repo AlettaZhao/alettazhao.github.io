@@ -1,0 +1,20 @@
+name: Tap Card keep-alive
+
+# Supabase pauses free projects after 7 days without traffic, which would
+# break everyone's QR codes. A tiny read every 3 days keeps it awake.
+on:
+  schedule:
+    - cron: '17 6 */3 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read one card
+        run: |
+          curl -fsS "https://ruypuqkicohjakakfsif.supabase.co/rest/v1/cards?select=slug&limit=1" \
+            -H "apikey: sb_publishable_UUF77ArxZZy9vJva9-Hf0Q_eIyU7Dqx"

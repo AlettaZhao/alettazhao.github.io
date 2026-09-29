@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tap Card</title>
+<meta name="description" content="Make a card people get by scanning your phone: CV, homepage, contact, in one scan.">
+<meta name="theme-color" content="#f4f1ea">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23d9542b'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%23fff' stroke-width='2.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tapcard.css">
+<style>
+  /* ---------- card view ---------- */
+  body.view-card {
+    min-height: 100dvh; display: flex; justify-content: center;
+    padding: max(20px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
+  }
+  .notice { max-width: 420px; text-align: center; margin: 18vh auto 0; }
+  .notice h1 { font-family: Fraunces, Georgia, serif; font-size: 28px; margin-bottom: 8px; }
+  .notice p { color: var(--muted); }
+  .spinner { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--accent); animation: spin .8s linear infinite; margin: 30vh auto 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- maker ---------- */
+  .maker { max-width: 1080px; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 16px 120px; }
+  .hero { display: grid; gap: 10px; margin-bottom: 34px; max-width: 640px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; }
+  .brand i { width: 22px; height: 22px; border-radius: 7px; background: var(--accent); position: relative; }
+  .brand i::after { content: ""; position: absolute; inset: 6px; border-radius: 50%; border: 2px solid #fff; }
+  .hero h1 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: clamp(34px, 6vw, 54px); line-height: 1.04; letter-spacing: -.02em; }
+  .hero h1 em { font-weight: 400; color: var(--accent); }
+  .hero p { color: var(--muted); font-size: 17px; }
+  .demo-banner { background: var(--chip); border-radius: 12px; padding: 12px 14px; font-size: 14px; margin-bottom: 22px; }
+  .demo-banner b { color: var(--accent); }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 48px; align-items: start; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .preview-col { display: none; } }
+
+  fieldset { border: 0; padding: 0; margin: 0 0 30px; min-width: 0; }
+  legend, .legend { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 21px; margin-bottom: 4px; display: flex; align-items: baseline; gap: 10px; }
+  .legend small { font-family: Inter, system-ui, sans-serif; font-size: 13px; font-weight: 400; color: var(--muted); }
+  legend span, .legend > span { font-family: Inter, system-ui, sans-serif; font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .08em; }
+  .hint { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } }
+  label.f { display: grid; gap: 6px; font-size: 13.5px; font-weight: 500; margin-bottom: 12px; }
+  label.f small { color: var(--muted); font-weight: 400; }
+  input[type=text], input[type=email], input[type=url], input[type=password], textarea {
+    width: 100%; font: 16px/1.4 Inter, system-ui, sans-serif; color: var(--ink); background: var(--card);
+    border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; outline: none; transition: border-color .15s, box-shadow .15s;
+  }
+  textarea { resize: vertical; min-height: 84px; }
+  input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .req::after { content: " *"; color: var(--accent); }
+
+  .drop {
+    display: flex; align-items: center; gap: 14px; padding: 14px; border: 1.5px dashed var(--line); border-radius: 14px;
+    background: var(--card); cursor: pointer; transition: border-color .15s, background .15s; margin-bottom: 12px; position: relative;
+  }
+  .drop:hover, .drop.over { border-color: var(--accent); }
+  .drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .drop .thumb { width: 54px; height: 54px; border-radius: 50%; background: var(--chip); flex: none; display: grid; place-items: center; overflow: hidden; color: var(--muted); }
+  .drop .thumb.doc { border-radius: 10px; }
+  .drop .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .drop .thumb svg { width: 22px; height: 22px; }
+  .drop b { display: block; font-size: 15px; }
+  .drop small { color: var(--muted); font-size: 13px; }
+  .drop .x { margin-left: auto; position: relative; z-index: 2; border: 0; background: none; color: var(--muted); font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; padding: 6px; }
+
+  details.opt { border: 1px solid var(--line); border-radius: 14px; padding: 4px 16px; margin-bottom: 30px; background: var(--card); }
+  details.opt summary { list-style: none; cursor: pointer; padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+  details.opt summary::-webkit-details-marker { display: none; }
+  details.opt summary::after { content: "+"; font-size: 22px; color: var(--muted); transition: transform .2s; }
+  details.opt[open] summary::after { transform: rotate(45deg); }
+  details.opt .inner { padding: 4px 0 8px; }
+
+  .swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+  .swatches button {
+    width: 40px; height: 40px; border-radius: 50%; border: 0; cursor: pointer; position: relative;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); transition: transform .15s;
+  }
+  .swatches button:hover { transform: scale(1.08); }
+  .swatches button[aria-pressed=true]::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid var(--ink); }
+
+  .slugrow { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: 12px; background: var(--card); overflow: hidden; }
+  .slugrow span { padding: 12px 0 12px 14px; color: var(--muted); font-size: 14px; white-space: nowrap; display: flex; align-items: center; }
+  .slugrow input { border: 0 !important; box-shadow: none !important; padding-left: 2px; min-width: 0; }
+  .slugrow:focus-within { border-color: var(--accent); }
+  .slugstate { font-size: 13px; min-height: 1.4em; margin-top: -6px; margin-bottom: 12px; }
+  .slugstate.ok { color: var(--ok); } .slugstate.bad { color: var(--danger); }
+
+  .submitbar { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .go {
+    border: 0; border-radius: 99px; background: var(--ink); color: var(--bg); font: 600 16px Inter, system-ui, sans-serif;
+    padding: 16px 28px; cursor: pointer; transition: transform .12s, opacity .2s;
+  }
+  .go:active { transform: scale(.97); }
+  .go:disabled { opacity: .5; cursor: progress; }
+  .ghost { border: 1px solid var(--line); background: none; color: var(--ink); border-radius: 99px; padding: 14px 22px; font: 500 15px Inter, system-ui, sans-serif; cursor: pointer; text-decoration: none; display: inline-block; }
+  .danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, transparent); }
+  .status { font-size: 14px; color: var(--muted); }
+  .status.bad { color: var(--danger); }
+
+  /* phone preview */
+  .preview-col { position: sticky; top: 24px; }
+  .phone {
+    border-radius: 44px; background: var(--ink); padding: 12px; box-shadow: 0 30px 60px -30px rgba(40,25,10,.45);
+  }
+  .screen { border-radius: 33px; background: var(--bg); height: 720px; overflow-y: auto; padding: 42px 18px 24px; scrollbar-width: none; }
+  .screen::-webkit-scrollbar { display: none; }
+  .screen .tc h1 { font-size: 26px; }
+  .preview-cap { text-align: center; color: var(--muted); font-size: 13px; margin-top: 14px; }
+
+  /* mobile preview sheet */
+  .peek { display: none; }
+  @media (max-width: 900px) {
+    .peek { display: block; position: fixed; left: 50%; transform: translateX(-50%); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 20;
+      border: 0; border-radius: 99px; background: var(--accent); color: var(--accent-ink); font: 600 15px Inter, system-ui, sans-serif; padding: 13px 22px; box-shadow: 0 10px 24px -10px rgba(0,0,0,.4); }
+  }
+  .sheet { position: fixed; inset: 0; background: var(--bg); z-index: 30; overflow-y: auto; padding: 20px 16px 100px; display: flex; justify-content: center; }
+  .sheet .close { position: fixed; top: 14px; right: 14px; z-index: 31; }
+
+  /* success */
+  .done { max-width: 640px; margin: 0 auto; }
+  .done h1 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: clamp(32px, 6vw, 46px); line-height: 1.08; margin-bottom: 8px; }
+  .done h1 em { color: var(--accent); font-weight: 400; }
+  .done .lead { color: var(--muted); margin-bottom: 26px; }
+  .done-grid { display: grid; grid-template-columns: 200px 1fr; gap: 26px; align-items: center; margin-bottom: 26px; }
+  @media (max-width: 560px) { .done-grid { grid-template-columns: 1fr; justify-items: center; } }
+  .done-qr { width: 200px; aspect-ratio: 1; background: #fff; border-radius: 22px; padding: 16px; box-shadow: 0 16px 34px -18px rgba(60,40,20,.4); }
+  .done-qr svg { width: 100%; height: 100%; display: block; }
+  .actions { display: grid; gap: 10px; }
+  .actions a, .actions button { text-align: left; }
+  .urlbox { display: flex; gap: 8px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 6px 6px 6px 14px; margin-bottom: 10px; }
+  .urlbox code { flex: 1; font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .urlbox button { border: 0; background: var(--chip); color: var(--ink); border-radius: 8px; padding: 8px 12px; font: 600 13px Inter, system-ui, sans-serif; cursor: pointer; }
+  .keep { border: 1.5px solid var(--accent); border-radius: 16px; padding: 16px; margin: 26px 0; }
+  .keep h2 { font-size: 16px; margin-bottom: 4px; }
+  .keep p { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+  .tips { color: var(--muted); font-size: 14px; display: grid; gap: 6px; padding-left: 18px; }
+</style>
+</head>
+<body>
+
+<!-- card view: ?u=slug -->
+<div id="viewCard" hidden>
+  <div class="tc-ripple" aria-hidden="true" id="ripple"></div>
+  <main class="tc" id="cardRoot"><div class="spinner"></div></main>
+</div>
+
+<!-- maker / editor -->
+<div id="viewMaker" class="maker" hidden>
+  <header class="hero">
+    <span class="brand"><i></i>Tap Card</span>
+    <h1 id="heroTitle">Your CV, one <em>scan</em> away.</h1>
+    <p id="heroSub">Fill this in once. You get a page with your CV, homepage and contact, plus a QR code people scan off your phone at conferences.</p>
+  </header>
+  <p class="demo-banner" id="demoBanner" hidden><b>Demo mode.</b> Nothing is uploaded yet: cards are kept only in this browser until the database is connected.</p>
+
+  <div class="layout">
+    <form id="form" novalidate>
+      <fieldset>
+        <legend><span>01</span>About you</legend>
+        <p class="hint">This is the top of your card.</p>
+        <div class="grid2">
+          <label class="f"><span class="req">Full name</span><input type="text" name="name" maxlength="80" autocomplete="name" required></label>
+          <label class="f">Name in another script <small>e.g. 赵小炫, Ζωή, Алексей</small><input type="text" name="altName" maxlength="40"></label>
+          <label class="f">Role<input type="text" name="role" maxlength="60" placeholder="PhD candidate"></label>
+          <label class="f">Affiliation<input type="text" name="affiliation" maxlength="80" placeholder="Università di Bologna"></label>
+        </div>
+        <label class="f">One line about your work <small>What would you say in the first ten seconds?</small><textarea name="bio" maxlength="220" rows="3"></textarea></label>
+        <label class="f">Event <small>Shown as "Nice to meet you · …". Leave empty for any occasion.</small><input type="text" name="event" maxlength="40" placeholder="ISMAR 2026 · Bari"></label>
+      </fieldset>
+
+      <fieldset>
+        <legend><span>02</span>Photo &amp; CV</legend>
+        <p class="hint">Your photo also sits in the middle of your QR code. Max 5 MB each.</p>
+        <label class="drop" id="photoDrop">
+          <input type="file" name="photoFile" accept="image/*">
+          <span class="thumb" id="photoThumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="9" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span>
+          <span><b id="photoLabel">Add a photo</b><small id="photoSmall">Square works best · JPG or PNG</small></span>
+          <button type="button" class="x" id="photoClear" hidden>Remove</button>
+        </label>
+        <label class="drop" id="cvDrop">
+          <input type="file" name="cvFile" accept="application/pdf">
+          <span class="thumb doc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg></span>
+          <span><b id="cvLabel">Upload your CV</b><small id="cvSmall">PDF</small></span>
+          <button type="button" class="x" id="cvClear" hidden>Remove</button>
+        </label>
+        <label class="f">…or link to a CV that lives elsewhere<input type="url" name="cvLink" placeholder="https://…" inputmode="url"></label>
+      </fieldset>
+
+      <fieldset>
+        <legend><span>03</span>Links</legend>
+        <p class="hint">Only the ones you fill in will show.</p>
+        <div class="grid2">
+          <label class="f">Homepage<input type="url" name="website" placeholder="https://…" inputmode="url"></label>
+          <label class="f">Email<input type="email" name="email" autocomplete="email" inputmode="email"></label>
+          <label class="f">LinkedIn<input type="url" name="linkedin" placeholder="https://linkedin.com/in/…" inputmode="url"></label>
+          <label class="f">Google Scholar<input type="url" name="scholar" placeholder="https://scholar.google.com/…" inputmode="url"></label>
+          <label class="f">ORCID<input type="url" name="orcid" placeholder="https://orcid.org/…" inputmode="url"></label>
+          <label class="f">GitHub<input type="url" name="github" placeholder="https://github.com/…" inputmode="url"></label>
+        </div>
+      </fieldset>
+
+      <details class="opt" id="featDetails">
+        <summary><span class="legend"><span>04</span>Feature one thing <small>optional</small></span></summary>
+        <div class="inner">
+          <p class="hint">A paper, demo or poster you're presenting. It also gets its own QR code on your scan page.</p>
+          <div class="grid2">
+            <label class="f">Label<input type="text" name="fLabel" maxlength="40" placeholder="At ISMAR this year"></label>
+            <label class="f">Tab name on the scan page<input type="text" name="fTab" maxlength="14" placeholder="My paper"></label>
+          </div>
+          <label class="f">Title<input type="text" name="fTitle" maxlength="200"></label>
+          <label class="f">Details <small>Authors, venue, session…</small><input type="text" name="fMeta" maxlength="160"></label>
+          <div class="grid2">
+            <label class="f">Link<input type="url" name="fLink" placeholder="https://…" inputmode="url"></label>
+            <label class="f">Link text<input type="text" name="fLinkLabel" maxlength="30" placeholder="Read the paper"></label>
+          </div>
+        </div>
+      </details>
+
+      <fieldset>
+        <legend><span id="lookNo">05</span>Your colour</legend>
+        <div class="swatches" id="swatches" role="group" aria-label="Accent colour"></div>
+      </fieldset>
+
+      <fieldset id="linkSet">
+        <legend><span>06</span>Your link</legend>
+        <p class="hint">Short and lowercase. This is what your QR code points to, so it can't be changed later.</p>
+        <label class="f"><span class="req">Link name</span>
+          <span class="slugrow"><span id="slugPrefix"></span><input type="text" name="slug" maxlength="32" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="your-name"></span>
+        </label>
+        <p class="slugstate" id="slugState" aria-live="polite"></p>
+        <label class="f" id="inviteField"><span class="req">Invite code</span><small>Ask Xiaoxuan for it.</small><input type="password" name="invite" autocomplete="off"></label>
+      </fieldset>
+
+      <div class="submitbar">
+        <button class="go" type="submit" id="go">Create my card</button>
+        <button class="ghost danger" type="button" id="del" hidden>Delete my card</button>
+        <span class="status" id="status" aria-live="polite"></span>
+      </div>
+    </form>
+
+    <aside class="preview-col" aria-label="Live preview">
+      <div class="phone"><div class="screen" id="previewScreen"><div class="tc" id="preview"></div></div></div>
+      <p class="preview-cap">Live preview · what people see after scanning</p>
+    </aside>
+  </div>
+  <button class="peek" type="button" id="peek">Preview my card</button>
+  <div class="sheet" id="sheet" hidden><button class="ghost close" type="button" id="sheetClose">Close</button><div class="tc" id="sheetCard"></div></div>
+</div>
+
+<!-- success -->
+<div id="viewDone" class="maker" hidden>
+  <div class="done">
+    <span class="brand"><i></i>Tap Card</span>
+    <h1 id="doneTitle" style="margin-top:18px">Your card is <em>live.</em></h1>
+    <p class="lead">Open the scan page on your phone at the event and let people point their camera at it.</p>
+    <div class="done-grid">
+      <div class="done-qr" id="doneQr"></div>
+      <div class="actions">
+        <div class="urlbox"><code id="doneUrl"></code><button type="button" data-copy="doneUrl">Copy</button></div>
+        <a class="go" id="openQr" href="#" style="text-align:center;text-decoration:none">Open my scan page</a>
+        <a class="ghost" id="openCard" href="#" target="_blank" rel="noopener">See my card</a>
+      </div>
+    </div>
+    <div class="submitbar" style="margin-bottom:8px">
+      <button class="ghost" type="button" id="dlWall">Download lock-screen wallpaper</button>
+      <button class="ghost" type="button" id="dlQr">Download QR (PNG)</button>
+    </div>
+    <div class="keep">
+      <h2>Save your edit link</h2>
+      <p>It's the only way to change or delete your card later. There's no password reset, so bookmark it or email it to yourself.</p>
+      <div class="urlbox" style="margin:0"><code id="editUrl"></code><button type="button" data-copy="editUrl">Copy</button></div>
+    </div>
+    <ul class="tips">
+      <li>On iPhone: open the scan page in Safari → Share → <b>Add to Home Screen</b>. It opens like an app.</li>
+      <li>Have an NFC sticker? Write your card link into it with the free <b>NFC Tools</b> app and add <code>&amp;via=tap</code> to the end.</li>
+    </ul>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="tapcard.js"></script>
+<script>
+(() => {
+  const P = new URLSearchParams(location.search);
+  const $ = id => document.getElementById(id);
+  const show = id => ['viewCard', 'viewMaker', 'viewDone'].forEach(v => $(v).hidden = v !== id);
+
+  // ================= card view =================
+  if (P.get('u')) {
+    document.body.classList.add('view-card');
+    show('viewCard');
+    const slug = P.get('u').toLowerCase();
+    TC.getCard(slug).then(d => {
+      if (!d) { $('cardRoot').innerHTML = `<div class="notice"><h1>No card here</h1><p>Nobody has claimed “${TC.esc(slug)}” yet.</p></div>`; return; }
+      document.title = d.name ? `${d.name}${d.event ? ' · ' + d.event : ''}` : 'Tap Card';
+      TC.applyAccent(document.documentElement, d.accent);
+      $('ripple').innerHTML = '<span></span><span></span><span></span>';
+      $('cardRoot').innerHTML = TC.cardHtml(d, { animate: true, via: P.get('via') === 'tap' ? 'tap' : 'scan' });
+    }).catch(() => {
+      $('cardRoot').innerHTML = `<div class="notice"><h1>Couldn't load this card</h1><p>Check your connection and try again.</p></div>`;
+    });
+    return;
+  }
+
+  // ================= maker / editor =================
+  show('viewMaker');
+  const form = $('form'), F = n => form.elements[n];
+  const editSlug = (P.get('edit') || '').toLowerCase();
+  const tokenKey = s => 'tapcard-token-' + s;
+  let token = decodeURIComponent(location.hash.slice(1)) || '';
+  if (editSlug && !token) { try { token = localStorage.getItem(tokenKey(editSlug)) || ''; } catch (e) {} }
+
+  $('demoBanner').hidden = TC.live;
+  $('inviteField').hidden = !TC.live || !!editSlug;
+  $('slugPrefix').textContent = TC.cardUrl('').replace(/^https?:\/\//, '');
+
+  // state that isn't a plain input
+  const state = { accent: TC.ACCENTS[0].hex, photo: '', photoBlob: null, cv: '', cvFile: null };
+
+  // ---- colour swatches
+  TC.ACCENTS.forEach(a => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.title = a.name; b.setAttribute('aria-label', a.name); b.style.background = a.hex; b.dataset.hex = a.hex;
+    b.onclick = () => { state.accent = a.hex; syncSwatches(); render(); };
+    $('swatches').appendChild(b);
+  });
+  const syncSwatches = () => $('swatches').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.hex === state.accent));
+
+  // ---- photo: crop to a square and shrink before upload
+  async function squarePhoto(file) {
+    const url = URL.createObjectURL(file);
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const s = Math.min(img.width, img.height), out = 600;
+    const c = document.createElement('canvas'); c.width = c.height = out;
+    c.getContext('2d').drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, out, out);
+    URL.revokeObjectURL(url);
+    return new Promise(res => c.toBlob(res, 'image/jpeg', .86));
+  }
+  function showPhoto() {
+    const src = state.photoBlob ? URL.createObjectURL(state.photoBlob) : state.photo;
+    const has = !!src;
+    $('photoThumb').innerHTML = has ? `<img src="${TC.esc(src)}" alt="">` : $('photoThumb').dataset.empty;
+    $('photoLabel').textContent = has ? 'Photo added' : 'Add a photo';
+    $('photoSmall').textContent = has ? 'Tap to replace' : 'Square works best · JPG or PNG';
+    $('photoClear').hidden = !has;
+    state.previewPhoto = src;
+  }
+  $('photoThumb').dataset.empty = $('photoThumb').innerHTML;
+  F('photoFile').addEventListener('change', async e => {
+    const f = e.target.files[0]; if (!f) return;
+    if (!f.type.startsWith('image/')) return setStatus('That file isn’t an image.', true);
+    try { state.photoBlob = await squarePhoto(f); showPhoto(); render(); setStatus(''); }
+    catch (err) { setStatus('Couldn’t read that image. Try a JPG or PNG.', true); }
+    e.target.value = '';
+  });
+  $('photoClear').onclick = e => { e.preventDefault(); state.photoBlob = null; state.photo = ''; showPhoto(); render(); };
+
+  function showCv() {
+    const has = !!(state.cvFile || state.cv);
+    $('cvLabel').textContent = state.cvFile ? state.cvFile.name : state.cv ? 'CV uploaded' : 'Upload your CV';
+    $('cvSmall').textContent = state.cvFile ? `${(state.cvFile.size / 1048576).toFixed(1)} MB · PDF` : state.cv ? 'Tap to replace' : 'PDF';
+    $('cvClear').hidden = !has;
+  }
+  F('cvFile').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    if (f.type !== 'application/pdf') { setStatus('Your CV needs to be a PDF.', true); e.target.value = ''; return; }
+    if (f.size > 5 * 1048576) { setStatus('That PDF is over 5 MB. Try exporting a smaller one.', true); e.target.value = ''; return; }
+    state.cvFile = f; state.cv = ''; showCv(); render(); setStatus('');
+    e.target.value = '';
+  });
+  $('cvClear').onclick = e => { e.preventDefault(); state.cvFile = null; state.cv = ''; showCv(); render(); };
+
+  // drag-over styling
+  document.querySelectorAll('.drop').forEach(d => {
+    d.addEventListener('dragover', () => d.classList.add('over'));
+    ['dragleave', 'drop'].forEach(ev => d.addEventListener(ev, () => d.classList.remove('over')));
+  });
+
+  // ---- collect the card data from the form
+  function collect() {
+    const v = n => (F(n).value || '').trim();
+    const d = {
+      name: v('name'), altName: v('altName'), role: v('role'), affiliation: v('affiliation'),
+      bio: v('bio'), event: v('event'), website: v('website'), email: v('email'),
+      linkedin: v('linkedin'), scholar: v('scholar'), orcid: v('orcid'), github: v('github'),
+      accent: state.accent, photo: state.photo, cv: state.cv || v('cvLink')
+    };
+    const f = { label: v('fLabel'), tab: v('fTab'), title: v('fTitle'), meta: v('fMeta'), link: v('fLink'), linkLabel: v('fLinkLabel') };
+    if (f.title || f.link) d.featured = f;
+    return d;
+  }
+
+  // ---- live preview
+  function render() {
+    const d = collect();
+    const pv = Object.assign({}, d, { photo: state.previewPhoto || d.photo, cv: state.cvFile ? TC.BASE + '#cv' : d.cv });
+    if (!pv.name) pv.name = 'Your name';
+    const html = TC.cardHtml(pv, { via: 'scan', preview: true });
+    $('preview').innerHTML = html;
+    if (!$('sheet').hidden) $('sheetCard').innerHTML = html;
+    TC.applyAccent(document.documentElement, d.accent);
+  }
+  form.addEventListener('input', e => { if (e.target.name === 'name' && !slugTouched && !editSlug) autoSlug(); render(); });
+  $('peek').onclick = () => { $('sheet').hidden = false; render(); document.body.style.overflow = 'hidden'; };
+  $('sheetClose').onclick = () => { $('sheet').hidden = true; document.body.style.overflow = ''; };
+
+  // ---- link name (slug)
+  let slugTouched = false, slugTimer = null, createdSlug = null;
+  function autoSlug() { F('slug').value = TC.slugify(F('name').value); checkSlug(); }
+  F('slug').addEventListener('input', () => {
+    slugTouched = true;
+    F('slug').value = F('slug').value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+    checkSlug();
+  });
+  function slugMsg(t, cls) { $('slugState').textContent = t; $('slugState').className = 'slugstate ' + (cls || ''); }
+  function checkSlug() {
+    clearTimeout(slugTimer);
+    const s = F('slug').value;
+    if (!s) return slugMsg('');
+    if (!TC.slugOk(s)) return slugMsg('2–32 characters: letters, numbers and dashes.', 'bad');
+    slugMsg('Checking…');
+    slugTimer = setTimeout(async () => {
+      try {
+        const taken = await TC.getCard(s);
+        if (F('slug').value !== s) return;
+        slugMsg(taken ? 'Taken, try another.' : 'Available ✓', taken ? 'bad' : 'ok');
+      } catch (e) { slugMsg(''); }
+    }, 350);
+  }
+
+  function setStatus(t, bad) { $('status').textContent = t; $('status').className = 'status' + (bad ? ' bad' : ''); }
+  const MSG = {
+    bad_invite: 'That invite code isn’t right.', slug_taken: 'That link name was just taken. Pick another.',
+    bad_slug: 'Link name: 2–32 lowercase letters, numbers and dashes.', bad_token: 'This edit link isn’t valid any more.',
+    too_large: 'A file is too big (5 MB max).', bad_type: 'That file type isn’t allowed.',
+    storage_full: 'This browser’s demo storage is full. Try a smaller photo.', network: 'Something went wrong. Check your connection and try again.'
+  };
+
+  // ---- submit
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const slug = editSlug || F('slug').value;
+    const d = collect();
+    if (!d.name) { F('name').focus(); return setStatus('Add your name first.', true); }
+    if (!editSlug && !TC.slugOk(slug)) { F('slug').focus(); return setStatus(MSG.bad_slug, true); }
+    if (!editSlug && TC.live && !F('invite').value.trim()) { F('invite').focus(); return setStatus('Add the invite code.', true); }
+    for (const k of ['website', 'linkedin', 'scholar', 'orcid', 'github', 'cvLink', 'fLink']) {
+      const val = F(k).value.trim();
+      if (val && !TC.href(val)) { F(k).focus(); return setStatus('That link doesn’t look right: ' + val, true); }
+    }
+    $('go').disabled = true;
+    try {
+      // New card: claim the link with the invite code first, so a wrong code uploads nothing.
+      if (!editSlug && createdSlug !== slug) {
+        if (await TC.getCard(slug)) throw new Error('slug_taken');
+        setStatus('Checking invite code…');
+        token = await TC.createCard(slug, F('invite').value.trim(), { name: d.name, accent: d.accent });
+        createdSlug = slug;
+        try { localStorage.setItem(tokenKey(slug), token); } catch (e) {}
+      }
+      if (state.photoBlob) { setStatus('Uploading photo…'); d.photo = await TC.upload(slug, state.photoBlob, 'jpg', 'image/jpeg'); }
+      if (state.cvFile) { setStatus('Uploading CV…'); d.cv = await TC.upload(slug, state.cvFile, 'pdf', 'application/pdf'); }
+      setStatus('Saving…');
+      d.vcf = await TC.upload(slug, new Blob([TC.vcard(d)], { type: 'text/vcard' }), 'vcf', 'text/vcard');
+      await TC.updateCard(slug, token, d);
+      try { localStorage.setItem(tokenKey(slug), token); } catch (e) {}
+      done(slug, d);
+    } catch (err) {
+      setStatus(MSG[err.message] || MSG.network, true);
+      if (err.message === 'slug_taken') { slugMsg('Taken, try another.', 'bad'); F('slug').focus(); }
+    } finally { $('go').disabled = false; }
+  });
+
+  $('del').onclick = async () => {
+    if (!confirm('Delete your card for good? Your link and QR code will stop working.')) return;
+    try {
+      await TC.deleteCard(editSlug, token);
+      try { localStorage.removeItem(tokenKey(editSlug)); } catch (e) {}
+      location.href = TC.BASE;
+    } catch (err) { setStatus(MSG[err.message] || MSG.network, true); }
+  };
+
+  // ---- success screen
+  function done(slug, d) {
+    show('viewDone'); window.scrollTo(0, 0);
+    const card = TC.cardUrl(slug), edit = `${TC.BASE}?edit=${encodeURIComponent(slug)}#${token}`;
+    $('doneTitle').innerHTML = editSlug ? 'Card <em>updated.</em>' : 'Your card is <em>live.</em>';
+    $('doneUrl').textContent = card;
+    $('editUrl').textContent = edit;
+    $('openCard').href = card;
+    $('openQr').href = TC.qrUrl(slug);
+    $('doneQr').innerHTML = TC.qrSvg(card, d.photo, d.accent);
+    $('dlQr').onclick = async () => TC.saveCanvas(await TC.qrPng(card, d.photo, d.accent), `${slug}-qr.png`);
+    $('dlWall').onclick = async () => TC.saveCanvas(await TC.wallpaper(d, slug), `${slug}-lockscreen.png`);
+    if (!editSlug) history.replaceState(null, '', `?edit=${encodeURIComponent(slug)}#${token}`);
+  }
+  document.querySelectorAll('[data-copy]').forEach(b => b.onclick = async () => {
+    try { await navigator.clipboard.writeText($(b.dataset.copy).textContent); b.textContent = 'Copied'; setTimeout(() => b.textContent = 'Copy', 1500); } catch (e) {}
+  });
+
+  // ---- edit mode: load the existing card
+  async function loadForEdit() {
+    $('heroTitle').innerHTML = 'Edit your <em>card.</em>';
+    $('heroSub').textContent = 'Changes go live as soon as you save. Your link and QR code stay the same.';
+    $('go').textContent = 'Save changes';
+    $('del').hidden = false;
+    $('linkSet').hidden = true;
+    const d = await TC.getCard(editSlug).catch(() => null);
+    if (!d) { setStatus('Couldn’t find this card.', true); $('go').disabled = true; return; }
+    if (!token) setStatus('This link is missing its edit key, so changes won’t save.', true);
+    for (const k of ['name', 'altName', 'role', 'affiliation', 'bio', 'event', 'website', 'email', 'linkedin', 'scholar', 'orcid', 'github']) F(k).value = d[k] || '';
+    const uploadedCv = d.cv && /\/storage\/v1\/object\/public\/|^data:application\/pdf/.test(d.cv);
+    if (uploadedCv) state.cv = d.cv; else F('cvLink').value = d.cv || '';
+    state.photo = d.photo || ''; state.accent = TC.hexOk(d.accent);
+    const f = d.featured || {};
+    F('fLabel').value = f.label || ''; F('fTab').value = f.tab || ''; F('fTitle').value = f.title || '';
+    F('fMeta').value = f.meta || ''; F('fLink').value = f.link || ''; F('fLinkLabel').value = f.linkLabel || '';
+    if (f.title || f.link) $('featDetails').open = true;
+    showPhoto(); showCv(); syncSwatches(); render();
+  }
+
+  syncSwatches(); showPhoto(); showCv(); render();
+  if (editSlug) loadForEdit();
+})();
+</script>
+</body>
+</html>
