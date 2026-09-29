@@ -4,34 +4,226 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Scan to connect</title>
-<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Scan to get Xiaoxuan Zhao's card or ISMAR 2026 paper.">
+<meta name="theme-color" content="#f4f1ea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="My QR">
+<link rel="icon" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/images/avatar.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; }
-  html, body { background: #fff; color: #1b1a17; }
-  body {
-    min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 22px; padding: 16px; font: 16px/1.4 Inter, system-ui, -apple-system, sans-serif; text-align: center;
+  :root {
+    --bg: #f4f1ea; --ink: #1b1a17; --muted: #6b675e; --line: #e4dfd3;
+    --accent: #d9542b; --chip: #ebe6db;
   }
-  #qr { padding: 18px; border-radius: 20px; border: 2px solid #1b1a17; }
-  #qr img, #qr canvas { display: block; width: min(72vw, 320px) !important; height: auto !important; }
-  h1 { font-size: 22px; }
-  p { color: #6b675e; font-size: 14.5px; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #151412; --ink: #f1ede4; --muted: #a39e93; --line: #34312c; --accent: #f07449; --chip: #25231f; }
+  }
+  :root[data-theme="dark"] { --bg: #151412; --ink: #f1ede4; --muted: #a39e93; --line: #34312c; --accent: #f07449; --chip: #25231f; }
+
+  * { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    min-height: 100dvh; overflow-x: hidden;
+    font: 16px/1.45 Inter, system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased;
+    padding: max(22px, env(safe-area-inset-top)) 16px max(22px, env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 18px;
+  }
+
+  header { text-align: center; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px;
+    background: var(--chip); font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+  h1 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: clamp(34px, 10vw, 46px); line-height: 1.05; letter-spacing: -.015em; margin-top: 16px; }
+  .sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .sub b { font-weight: 500; letter-spacing: .12em; margin-right: 6px; }
+
+  /* QR stage */
+  .stage { position: relative; width: min(82vw, 360px); aspect-ratio: 1; perspective: 1200px; }
+  .pulse { position: absolute; inset: 0; pointer-events: none; }
+  .pulse span {
+    position: absolute; inset: 0; border-radius: 34px; border: 1.5px solid var(--accent); opacity: 0;
+    animation: pulse 3.6s cubic-bezier(.2,.7,.3,1) infinite;
+  }
+  .pulse span:nth-child(2) { animation-delay: 1.2s; }
+  .pulse span:nth-child(3) { animation-delay: 2.4s; }
+  @keyframes pulse { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.22); opacity: 0; } }
+
+  .card {
+    position: absolute; inset: 0; border-radius: 30px; background: #fff; padding: 7%;
+    box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 18px 40px -18px rgba(60,40,20,.35);
+    transform-style: preserve-3d; transition: transform .7s cubic-bezier(.3,1.3,.5,1);
+    cursor: pointer;
+  }
+  .card.flip { transform: rotateY(180deg); }
+  .face { position: absolute; inset: 7%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .face.back { transform: rotateY(180deg); }
+  .face svg { width: 100%; height: 100%; display: block; }
+  /* corner ticks, like a viewfinder */
+  .ticks { position: absolute; inset: -10px; pointer-events: none; }
+  .ticks b { position: absolute; width: 26px; height: 26px; border: 3px solid var(--ink); }
+  .ticks b:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 14px; }
+  .ticks b:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 14px; }
+  .ticks b:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 14px; }
+  .ticks b:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 14px; }
+
+  .caption { text-align: center; min-height: 3.2em; }
+  .caption .big { font-family: Fraunces, Georgia, serif; font-style: italic; font-size: 19px; }
+  .caption .small { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+  .caption > * { transition: opacity .25s ease; }
+  .caption.swap > * { opacity: 0; }
+
+  /* segmented switch */
+  .seg { position: relative; display: grid; grid-template-columns: 1fr 1fr; background: var(--chip); border-radius: 99px; padding: 4px; width: min(82vw, 320px); }
+  .seg button {
+    position: relative; z-index: 1; border: 0; background: none; color: var(--muted);
+    font: 600 14.5px Inter, system-ui, sans-serif; padding: 11px 0; border-radius: 99px; cursor: pointer;
+    transition: color .25s ease;
+  }
+  .seg button[aria-pressed="true"] { color: var(--bg); }
+  .seg .thumb {
+    position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px);
+    background: var(--ink); border-radius: 99px; transition: transform .45s cubic-bezier(.3,1.3,.5,1);
+  }
+  .seg.b .thumb { transform: translateX(100%); }
+
+  footer { display: flex; gap: 14px; align-items: center; font-size: 12.5px; color: var(--muted); }
+  footer button { border: 0; background: none; color: inherit; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 6px 2px; }
+  .awake { display: inline-flex; align-items: center; gap: 6px; }
+  .awake i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+  .awake.on i { background: #3a9d5d; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pulse, .pill i { animation: none; display: none; }
+    .card { transition: none; }
+  }
+  @media (max-height: 640px) { h1 { font-size: 30px; margin-top: 10px; } .stage { width: min(70vw, 300px); } }
 </style>
 </head>
 <body>
-  <!-- White background on purpose, even in dark mode: scanners read dark-on-light best. -->
-  <div id="qr"></div>
-  <div>
+  <header>
+    <span class="pill"><i></i>ISMAR 2026 · Bari</span>
     <h1>Xiaoxuan Zhao</h1>
-    <p>Scan with your camera · or tap the back of my phone</p>
+    <p class="sub"><b>赵小炫</b>PhD candidate · Università di Bologna</p>
+  </header>
+
+  <div class="stage">
+    <div class="pulse" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="ticks" aria-hidden="true"><b></b><b></b><b></b><b></b></div>
+    <div class="card" id="card" role="img" aria-label="QR code">
+      <div class="face front" id="front"></div>
+      <div class="face back" id="back"></div>
+    </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <div class="caption" id="caption" aria-live="polite">
+    <p class="big" id="capBig">Point your camera here</p>
+    <p class="small" id="capSmall">Card, CV &amp; contact in one tap</p>
+  </div>
+
+  <div class="seg" id="seg" role="group" aria-label="What to share">
+    <span class="thumb"></span>
+    <button type="button" aria-pressed="true" data-i="0">My card</button>
+    <button type="button" aria-pressed="false" data-i="1">My paper</button>
+  </div>
+
+  <footer>
+    <span class="awake" id="awake"><i></i><span id="awakeTxt">Screen may dim</span></span>
+    <button type="button" id="fs">Full screen</button>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
   <script>
-    new QRCode(document.getElementById('qr'), {
-      text: 'https://alettazhao.github.io/ismar/',
-      width: 640, height: 640, colorDark: '#1b1a17', colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
-    });
+  const MODES = [
+    { url: 'https://alettazhao.github.io/ismar/', big: 'Point your camera here', small: 'Card, CV & contact in one tap' },
+    { url: 'https://alettazhao.github.io/work/#olfactory-cues-in-mr', big: 'Scent as a memory cue in MR', small: 'IEEE TVCG · paper video' }
+  ];
+
+  // Draws a QR as SVG: rounded modules, soft finder "eyes", avatar in the middle.
+  // Level H tolerates ~30% damage, so the centre avatar stays safely scannable.
+  function drawQR(url) {
+    const q = qrcode(0, 'H'); q.addData(url); q.make();
+    const n = q.getModuleCount(), ink = '#1b1a17';
+    const hole = Math.round(n * 0.26) | 1, h0 = (n - hole) / 2, h1 = h0 + hole;
+    const inEye = (r, c) => (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
+    let dots = '';
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) {
+      if (!q.isDark(r, c) || inEye(r, c)) continue;
+      if (r >= h0 - .5 && r < h1 + .5 && c >= h0 - .5 && c < h1 + .5) continue;
+      dots += `<rect x="${c + .06}" y="${r + .06}" width=".88" height=".88" rx=".32"/>`;
+    }
+    const eye = (x, y) =>
+      `<rect x="${x + .5}" y="${y + .5}" width="6" height="6" rx="1.9" fill="none" stroke="${ink}" stroke-width="1"/>` +
+      `<rect x="${x + 2}" y="${y + 2}" width="3" height="3" rx=".9" fill="${ink}"/>`;
+    const cx = n / 2, rad = hole / 2;
+    return `<svg viewBox="0 0 ${n} ${n}" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+      <defs><clipPath id="av${n}${url.length}"><circle cx="${cx}" cy="${cx}" r="${rad - .7}"/></clipPath></defs>
+      <g fill="${ink}">${dots}</g>
+      ${eye(0, 0)}${eye(n - 7, 0)}${eye(0, n - 7)}
+      <circle cx="${cx}" cy="${cx}" r="${rad}" fill="#fff"/>
+      <image href="/images/avatar.jpg" x="${cx - rad}" y="${cx - rad}" width="${hole}" height="${hole}"
+        preserveAspectRatio="xMidYMid slice" clip-path="url(#av${n}${url.length})"/>
+      <circle cx="${cx}" cy="${cx}" r="${rad - .7}" fill="none" stroke="#d9542b" stroke-width=".35"/>
+    </svg>`;
+  }
+
+  const card = document.getElementById('card'), seg = document.getElementById('seg');
+  const caption = document.getElementById('caption');
+  document.getElementById('front').innerHTML = drawQR(MODES[0].url);
+  document.getElementById('back').innerHTML = drawQR(MODES[1].url);
+
+  let mode = 0;
+  function setMode(i) {
+    if (i === mode) return;
+    mode = i;
+    card.classList.toggle('flip', i === 1);
+    seg.classList.toggle('b', i === 1);
+    seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === i));
+    caption.classList.add('swap');
+    setTimeout(() => {
+      document.getElementById('capBig').textContent = MODES[i].big;
+      document.getElementById('capSmall').textContent = MODES[i].small;
+      caption.classList.remove('swap');
+    }, 250);
+  }
+  seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) setMode(+b.dataset.i); });
+  card.addEventListener('click', () => setMode(1 - mode));
+
+  // Swipe left/right on the card to flip too.
+  let sx = null;
+  card.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+  card.addEventListener('touchend', e => {
+    if (sx === null) return;
+    const dx = e.changedTouches[0].clientX - sx; sx = null;
+    if (Math.abs(dx) > 40) setMode(dx < 0 ? 1 : 0);
+  });
+
+  // Keep the screen awake while someone is scanning.
+  const awake = document.getElementById('awake'), awakeTxt = document.getElementById('awakeTxt');
+  let lock = null;
+  async function keepAwake() {
+    try {
+      lock = await navigator.wakeLock.request('screen');
+      awake.classList.add('on'); awakeTxt.textContent = 'Screen stays on';
+      lock.addEventListener('release', () => { awake.classList.remove('on'); awakeTxt.textContent = 'Screen may dim'; });
+    } catch (e) {}
+  }
+  if ('wakeLock' in navigator) {
+    keepAwake();
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); });
+  }
+
+  const fs = document.getElementById('fs');
+  if (!document.documentElement.requestFullscreen) fs.hidden = true;
+  fs.addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {});
+  });
+
   </script>
 </body>
 </html>
