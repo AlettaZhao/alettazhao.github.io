@@ -1,5 +1,6 @@
 // Tap Card shared library: storage, QR drawing, vCard, card rendering.
-// Needs config.js and qrcode-generator loaded first; supabase-js only when live.
+// Needs config.js and qrcode-generator loaded first. Talks to Supabase over plain
+// fetch (no client library), so the card a stranger scans loads as fast as possible.
 window.TC = (() => {
   const cfg = window.TAPCARD_CONFIG || {};
   const live = !!(cfg.supabaseUrl && cfg.supabaseKey);
@@ -22,9 +23,25 @@ window.TC = (() => {
     .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 32);
 
   // ---------- storage ----------
-  let sb = null;
-  const client = () => sb || (sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey,
-    { auth: { persistSession: false } }));
+  const API = String(cfg.supabaseUrl || '').replace(/\/+$/, '');
+  const HDR = { apikey: cfg.supabaseKey, Authorization: 'Bearer ' + cfg.supabaseKey };
+  async function api(path, opts = {}) {
+    let res;
+    try { res = await fetch(API + path, Object.assign({}, opts, { headers: Object.assign({}, HDR, opts.headers) })); }
+    catch (e) { fail('network'); }
+    const text = await res.text();
+    let body = null; try { body = text ? JSON.parse(text) : null; } catch (e) { body = text; }
+    if (!res.ok) fail(body || res.statusText);
+    return body;
+  }
+  const rpc = (name, args) => api('/rest/v1/rpc/' + name, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(args)
+  });
+
+  // Last-seen copy of each card, so the scan page still opens with no signal.
+  const CACHE = 'tapcard-cache-';
+  const cached = slug => { try { return JSON.parse(localStorage.getItem(CACHE + slug)); } catch (e) { return null; } };
+  const remember = (slug, d) => { try { d ? localStorage.setItem(CACHE + slug, JSON.stringify(d)) : localStorage.removeItem(CACHE + slug); } catch (e) {} };
 
   const DEMO_KEY = 'tapcard-demo';
   const demoRead = () => { try { return JSON.parse(localStorage.getItem(DEMO_KEY)) || {}; } catch (e) { return {}; } };
@@ -32,10 +49,10 @@ window.TC = (() => {
   const demoToken = () => Array.from(crypto.getRandomValues(new Uint8Array(24)), b => b.toString(16).padStart(2, '0')).join('');
 
   function errCode(e) {
-    const m = (e && (e.message || e.error_description || e.error)) || String(e);
+    const m = (e && typeof e === 'object' ? (e.message || e.error_description || e.error || e.code) : e) || '';
     for (const c of ['bad_invite', 'slug_taken', 'bad_token', 'storage_full']) if (m.includes(c)) return c;
     if (/cards_slug_check/.test(m)) return 'bad_slug';
-    if (/size|too large|exceeded/i.test(m)) return 'too_large';
+    if (/size|too large|exceeded|413/i.test(m)) return 'too_large';
     if (/mime|type/i.test(m)) return 'bad_type';
     return 'network';
   }
@@ -43,9 +60,10 @@ window.TC = (() => {
 
   async function getCard(slug) {
     if (!live) { const c = demoRead()[slug]; return c ? c.data : null; }
-    const { data, error } = await client().from('cards').select('data').eq('slug', slug).maybeSingle();
-    if (error) fail(error);
-    return data ? data.data : null;
+    const rows = await api('/rest/v1/cards?select=data&slug=eq.' + encodeURIComponent(slug));
+    const d = rows && rows[0] ? rows[0].data : null;
+    remember(slug, d);
+    return d;
   }
 
   async function upload(slug, blob, ext, contentType) {
@@ -53,9 +71,8 @@ window.TC = (() => {
       const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(blob);
     });
     const path = `${slug}/${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const { error } = await client().storage.from(bucket).upload(path, blob, { contentType, upsert: false });
-    if (error) fail(error);
-    return client().storage.from(bucket).getPublicUrl(path).data.publicUrl;
+    await api(`/storage/v1/object/${bucket}/${path}`, { method: 'POST', headers: { 'Content-Type': contentType }, body: blob });
+    return `${API}/storage/v1/object/public/${bucket}/${path}`;
   }
 
   async function createCard(slug, invite, data) {
@@ -64,9 +81,7 @@ window.TC = (() => {
       if (all[slug]) fail('slug_taken');
       const token = demoToken(); all[slug] = { data, token }; demoWrite(all); return token;
     }
-    const { data: token, error } = await client().rpc('create_card', { p_slug: slug, p_invite: invite, p_data: data });
-    if (error) fail(error);
-    return token;
+    return await rpc('create_card', { p_slug: slug, p_invite: invite, p_data: data });
   }
 
   async function updateCard(slug, token, data) {
@@ -75,8 +90,8 @@ window.TC = (() => {
       if (!all[slug] || all[slug].token !== token) fail('bad_token');
       all[slug].data = data; demoWrite(all); return true;
     }
-    const { error } = await client().rpc('update_card', { p_slug: slug, p_token: token, p_data: data });
-    if (error) fail(error);
+    await rpc('update_card', { p_slug: slug, p_token: token, p_data: data });
+    remember(slug, data);
     return true;
   }
 
@@ -86,8 +101,8 @@ window.TC = (() => {
       if (!all[slug] || all[slug].token !== token) fail('bad_token');
       delete all[slug]; demoWrite(all); return true;
     }
-    const { error } = await client().rpc('delete_card', { p_slug: slug, p_token: token });
-    if (error) fail(error);
+    await rpc('delete_card', { p_slug: slug, p_token: token });
+    remember(slug, null);
     return true;
   }
 
@@ -291,7 +306,7 @@ window.TC = (() => {
 
   return {
     live, BASE, ACCENTS, cardUrl, qrUrl, slugOk, slugify,
-    getCard, upload, createCard, updateCard, deleteCard,
+    getCard, cached, upload, createCard, updateCard, deleteCard,
     esc, href, hexOk, vcard, qrSvg, qrPng, wallpaper, saveCanvas, cardHtml, applyAccent
   };
 })();

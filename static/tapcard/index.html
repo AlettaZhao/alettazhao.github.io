@@ -100,6 +100,17 @@
   .ghost { border: 1px solid var(--line); background: none; color: var(--ink); border-radius: 99px; padding: 14px 22px; font: 500 15px Inter, system-ui, sans-serif; cursor: pointer; text-decoration: none; display: inline-block; }
   .danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, transparent); }
   .status { font-size: 14px; color: var(--muted); }
+  .err { color: var(--danger); font-size: 13px; font-weight: 400; margin-top: -2px; }
+  [aria-invalid=true] { border-color: var(--danger) !important; }
+  .slugrow:has([aria-invalid=true]) { border-color: var(--danger); }
+  @keyframes nudge { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+  .nudge { animation: nudge .35s ease; }
+  .go .spin { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .7s linear infinite; vertical-align: -2px; margin-right: 8px; }
+  .restored { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; font-size: 14px; margin-bottom: 22px; }
+  .restored button { border: 0; background: none; color: var(--accent); font: 600 14px Inter, system-ui, sans-serif; cursor: pointer; padding: 4px 0; }
+  .qr-cap { text-align: center; font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+  .slugrow .short { display: none; }
+  @media (max-width: 560px) { .slugrow .full { display: none; } .slugrow .short { display: flex; } }
   .status.bad { color: var(--danger); }
 
   /* phone preview */
@@ -156,6 +167,7 @@
     <h1 id="heroTitle">Your CV, one <em>scan</em> away.</h1>
     <p id="heroSub">Fill this in once. You get a page with your CV, homepage and contact, plus a QR code people scan off your phone at conferences.</p>
   </header>
+  <div class="restored" id="restored" hidden><span>Picked up where you left off. Photo and CV need adding again.</span><button type="button" id="startOver">Start over</button></div>
   <p class="demo-banner" id="demoBanner" hidden><b>Demo mode.</b> Nothing is uploaded yet: cards are kept only in this browser until the database is connected.</p>
 
   <div class="layout">
@@ -230,10 +242,10 @@
         <legend><span>06</span>Your link</legend>
         <p class="hint">Short and lowercase. This is what your QR code points to, so it can't be changed later.</p>
         <label class="f"><span class="req">Link name</span>
-          <span class="slugrow"><span id="slugPrefix"></span><input type="text" name="slug" maxlength="32" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="your-name"></span>
+          <span class="slugrow"><span class="full" id="slugPrefix"></span><span class="short">…/?u=</span><input type="text" name="slug" maxlength="32" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="your-name"></span>
         </label>
         <p class="slugstate" id="slugState" aria-live="polite"></p>
-        <label class="f" id="inviteField"><span class="req">Invite code</span><small>Ask Xiaoxuan for it.</small><input type="password" name="invite" autocomplete="off"></label>
+        <label class="f" id="inviteField"><span class="req">Invite code</span><small>Ask Xiaoxuan for it.</small><input type="text" name="invite" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
       </fieldset>
 
       <div class="submitbar">
@@ -259,8 +271,9 @@
     <h1 id="doneTitle" style="margin-top:18px">Your card is <em>live.</em></h1>
     <p class="lead">Open the scan page on your phone at the event and let people point their camera at it.</p>
     <div class="done-grid">
-      <div class="done-qr" id="doneQr"></div>
+      <div><div class="done-qr" id="doneQr"></div><p class="qr-cap">Scan with your phone to open<br>your scan page there</p></div>
       <div class="actions">
+        <p class="qr-cap" style="text-align:left;margin:0 0 -4px 2px">Your card link: share it anywhere</p>
         <div class="urlbox"><code id="doneUrl"></code><button type="button" data-copy="doneUrl">Copy</button></div>
         <a class="go" id="openQr" href="#" style="text-align:center;text-decoration:none">Open my scan page</a>
         <a class="ghost" id="openCard" href="#" target="_blank" rel="noopener">See my card</a>
@@ -273,7 +286,8 @@
     <div class="keep">
       <h2>Save your edit link</h2>
       <p>It's the only way to change or delete your card later. There's no password reset, so bookmark it or email it to yourself.</p>
-      <div class="urlbox" style="margin:0"><code id="editUrl"></code><button type="button" data-copy="editUrl">Copy</button></div>
+      <div class="urlbox" style="margin:0 0 10px"><code id="editUrl"></code><button type="button" data-copy="editUrl">Copy</button></div>
+      <a class="ghost" id="mailMe" href="#" hidden>Email all my links to myself</a>
     </div>
     <ul class="tips">
       <li>On iPhone: open the scan page in Safari → Share → <b>Add to Home Screen</b>. It opens like an app.</li>
@@ -283,7 +297,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="tapcard.js"></script>
 <script>
@@ -352,11 +365,13 @@
     $('photoClear').hidden = !has;
     state.previewPhoto = src;
   }
+  let photoPending = null;
   $('photoThumb').dataset.empty = $('photoThumb').innerHTML;
   F('photoFile').addEventListener('change', async e => {
     const f = e.target.files[0]; if (!f) return;
     if (!f.type.startsWith('image/')) return setStatus('That file isn’t an image.', true);
-    try { state.photoBlob = await squarePhoto(f); showPhoto(); render(); setStatus(''); }
+    photoPending = squarePhoto(f);
+    try { state.photoBlob = await photoPending; showPhoto(); render(); setStatus(''); }
     catch (err) { setStatus('Couldn’t read that image. Try a JPG or PNG.', true); }
     e.target.value = '';
   });
@@ -436,6 +451,31 @@
   }
 
   function setStatus(t, bad) { $('status').textContent = t; $('status').className = 'status' + (bad ? ' bad' : ''); }
+
+  // Show an error right under the field it's about, and bring that field into view.
+  function fieldError(name, msg) {
+    const input = F(name), label = input.closest('label.f');
+    const det = input.closest('details'); if (det) det.open = true;
+    input.setAttribute('aria-invalid', 'true');
+    let p = label.querySelector('.err');
+    if (!p) { p = document.createElement('span'); p.className = 'err'; p.setAttribute('role', 'alert'); label.appendChild(p); }
+    p.textContent = msg;
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    input.focus({ preventScroll: true });
+    label.classList.remove('nudge'); void label.offsetWidth; label.classList.add('nudge');
+    setStatus('');
+  }
+  form.addEventListener('input', e => {
+    if (e.target.getAttribute('aria-invalid')) {
+      e.target.removeAttribute('aria-invalid');
+      const p = e.target.closest('label.f')?.querySelector('.err'); if (p) p.remove();
+    }
+  });
+  const goLabel = () => editSlug ? 'Save changes' : 'Create my card';
+  function busy(text) {
+    $('go').disabled = !!text;
+    $('go').innerHTML = text ? `<span class="spin" aria-hidden="true"></span>${TC.esc(text)}` : goLabel();
+  }
   const MSG = {
     bad_invite: 'That invite code isn’t right.', slug_taken: 'That link name was just taken. Pick another.',
     bad_slug: 'Link name: 2–32 lowercase letters, numbers and dashes.', bad_token: 'This edit link isn’t valid any more.',
@@ -448,34 +488,39 @@
     e.preventDefault();
     const slug = editSlug || F('slug').value;
     const d = collect();
-    if (!d.name) { F('name').focus(); return setStatus('Add your name first.', true); }
-    if (!editSlug && !TC.slugOk(slug)) { F('slug').focus(); return setStatus(MSG.bad_slug, true); }
-    if (!editSlug && TC.live && !F('invite').value.trim()) { F('invite').focus(); return setStatus('Add the invite code.', true); }
-    for (const k of ['website', 'linkedin', 'scholar', 'orcid', 'github', 'cvLink', 'fLink']) {
+    if (!d.name) return fieldError('name', 'Add your name.');
+    if (d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return fieldError('email', 'That email doesn’t look right.');
+    for (const k of ['cvLink', 'website', 'linkedin', 'scholar', 'orcid', 'github', 'fLink']) {
       const val = F(k).value.trim();
-      if (val && !TC.href(val)) { F(k).focus(); return setStatus('That link doesn’t look right: ' + val, true); }
+      if (val && !TC.href(val)) return fieldError(k, 'That doesn’t look like a web link. It should start with https://');
     }
-    $('go').disabled = true;
+    if (!editSlug && !TC.slugOk(slug)) return fieldError('slug', slug ? MSG.bad_slug : 'Pick a link name.');
+    if (!editSlug && TC.live && !F('invite').value.trim()) return fieldError('invite', 'Add the invite code.');
+    busy('Saving…');
+    if (photoPending) { try { await photoPending; } catch (e) {} } // a big photo may still be resizing
     try {
       // New card: claim the link with the invite code first, so a wrong code uploads nothing.
       if (!editSlug && createdSlug !== slug) {
         if (await TC.getCard(slug)) throw new Error('slug_taken');
-        setStatus('Checking invite code…');
+        busy('Checking invite code…');
         token = await TC.createCard(slug, F('invite').value.trim(), { name: d.name, accent: d.accent });
         createdSlug = slug;
         try { localStorage.setItem(tokenKey(slug), token); } catch (e) {}
       }
-      if (state.photoBlob) { setStatus('Uploading photo…'); d.photo = await TC.upload(slug, state.photoBlob, 'jpg', 'image/jpeg'); }
-      if (state.cvFile) { setStatus('Uploading CV…'); d.cv = await TC.upload(slug, state.cvFile, 'pdf', 'application/pdf'); }
-      setStatus('Saving…');
+      if (state.photoBlob) { busy('Uploading photo…'); d.photo = await TC.upload(slug, state.photoBlob, 'jpg', 'image/jpeg'); }
+      if (state.cvFile) { busy('Uploading CV…'); d.cv = await TC.upload(slug, state.cvFile, 'pdf', 'application/pdf'); }
+      busy('Saving…');
       d.vcf = await TC.upload(slug, new Blob([TC.vcard(d)], { type: 'text/vcard' }), 'vcf', 'text/vcard');
       await TC.updateCard(slug, token, d);
-      try { localStorage.setItem(tokenKey(slug), token); } catch (e) {}
+      try { localStorage.setItem(tokenKey(slug), token); localStorage.removeItem(DRAFT); } catch (e) {}
+      setStatus('');
       done(slug, d);
     } catch (err) {
-      setStatus(MSG[err.message] || MSG.network, true);
-      if (err.message === 'slug_taken') { slugMsg('Taken, try another.', 'bad'); F('slug').focus(); }
-    } finally { $('go').disabled = false; }
+      const m = MSG[err.message] || MSG.network;
+      if (err.message === 'bad_invite') fieldError('invite', m);
+      else if (err.message === 'slug_taken') { fieldError('slug', m); slugMsg(''); }
+      else setStatus(m, true);
+    } finally { busy(''); }
   });
 
   $('del').onclick = async () => {
@@ -496,7 +541,12 @@
     $('editUrl').textContent = edit;
     $('openCard').href = card;
     $('openQr').href = TC.qrUrl(slug);
-    $('doneQr').innerHTML = TC.qrSvg(card, d.photo, d.accent);
+    $('doneQr').innerHTML = TC.qrSvg(TC.qrUrl(slug), d.photo, d.accent);
+    if (d.email) {
+      const body = `My Tap Card\n\nCard (what people see): ${card}\nScan page (open on my phone): ${TC.qrUrl(slug)}\n\nEdit link (keep private, it's the only way to edit):\n${edit}\n`;
+      $('mailMe').href = `mailto:${encodeURIComponent(d.email)}?subject=${encodeURIComponent('My Tap Card links')}&body=${encodeURIComponent(body)}`;
+      $('mailMe').hidden = false;
+    }
     $('dlQr').onclick = async () => TC.saveCanvas(await TC.qrPng(card, d.photo, d.accent), `${slug}-qr.png`);
     $('dlWall').onclick = async () => TC.saveCanvas(await TC.wallpaper(d, slug), `${slug}-lockscreen.png`);
     if (!editSlug) history.replaceState(null, '', `?edit=${encodeURIComponent(slug)}#${token}`);
@@ -509,7 +559,7 @@
   async function loadForEdit() {
     $('heroTitle').innerHTML = 'Edit your <em>card.</em>';
     $('heroSub').textContent = 'Changes go live as soon as you save. Your link and QR code stay the same.';
-    $('go').textContent = 'Save changes';
+    busy('');
     $('del').hidden = false;
     $('linkSet').hidden = true;
     const d = await TC.getCard(editSlug).catch(() => null);
@@ -525,6 +575,35 @@
     if (f.title || f.link) $('featDetails').open = true;
     showPhoto(); showCv(); syncSwatches(); render();
   }
+
+  // ---- draft: text fields are kept in this browser until the card is created
+  const DRAFT = 'tapcard-draft';
+  const DRAFT_FIELDS = ['name', 'altName', 'role', 'affiliation', 'bio', 'event', 'website', 'email', 'linkedin', 'scholar', 'orcid', 'github', 'cvLink',
+    'fLabel', 'fTab', 'fTitle', 'fMeta', 'fLink', 'fLinkLabel', 'slug'];
+  let draftTimer = null;
+  function saveDraft() {
+    if (editSlug) return;
+    clearTimeout(draftTimer);
+    draftTimer = setTimeout(() => {
+      const o = { accent: state.accent, slugTouched };
+      DRAFT_FIELDS.forEach(k => o[k] = F(k).value);
+      try { localStorage.setItem(DRAFT, JSON.stringify(o)); } catch (e) {}
+    }, 300);
+  }
+  form.addEventListener('input', saveDraft);
+  $('swatches').addEventListener('click', saveDraft);
+  if (!editSlug) {
+    let o = null; try { o = JSON.parse(localStorage.getItem(DRAFT)); } catch (e) {}
+    if (o && DRAFT_FIELDS.some(k => o[k])) {
+      DRAFT_FIELDS.forEach(k => { if (o[k]) F(k).value = o[k]; });
+      state.accent = TC.hexOk(o.accent); slugTouched = !!o.slugTouched;
+      if (o.fTitle || o.fLink) $('featDetails').open = true;
+      $('restored').hidden = false;
+      if (F('slug').value) checkSlug();
+    }
+  }
+  $('startOver').onclick = () => { try { localStorage.removeItem(DRAFT); } catch (e) {} location.href = TC.BASE; };
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
   syncSwatches(); showPhoto(); showCv(); render();
   if (editSlug) loadForEdit();
