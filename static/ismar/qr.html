@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scan to connect</title>
+<meta name="theme-color" content="#ffffff">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: #fff; color: #1b1a17; }
+  body {
+    min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 22px; padding: 16px; font: 16px/1.4 Inter, system-ui, -apple-system, sans-serif; text-align: center;
+  }
+  #qr { padding: 18px; border-radius: 20px; border: 2px solid #1b1a17; }
+  #qr img, #qr canvas { display: block; width: min(72vw, 320px) !important; height: auto !important; }
+  h1 { font-size: 22px; }
+  p { color: #6b675e; font-size: 14.5px; }
+</style>
+</head>
+<body>
+  <!-- White background on purpose, even in dark mode: scanners read dark-on-light best. -->
+  <div id="qr"></div>
+  <div>
+    <h1>Xiaoxuan Zhao</h1>
+    <p>Scan with your camera · or tap the back of my phone</p>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    new QRCode(document.getElementById('qr'), {
+      text: 'https://alettazhao.github.io/ismar/',
+      width: 640, height: 640, colorDark: '#1b1a17', colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  </script>
+</body>
+</html>
