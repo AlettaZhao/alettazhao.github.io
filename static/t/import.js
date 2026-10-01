@@ -21,6 +21,8 @@ window.TCImport = (() => {
     s = (s || '').trim();
     if (!s || s.length > 48 || /[\d@|/:]/.test(s)) return false;
     if (/curriculum|vitae|resume|résumé|homepage|home page|portfolio|welcome|about|publications/i.test(s)) return false;
+    // Typical CV section headings set in a big font ("Research Experience", "Selected Awards").
+    if (/\b(education|experience|research|skills|awards?|honou?rs|projects?|interests|contact|summary|profile|references|teaching|service|employment|selected|languages|activities|grants?|talks)\b/i.test(s)) return false;
     if (/^[\p{Script=Han}\s·]{2,8}$/u.test(s)) return true;
     const words = s.split(/\s+/);
     return words.length >= 2 && words.length <= 5 && words.every(w => /^[\p{Lu}][\p{L}'’.-]*$/u.test(w) || /^(van|von|de|da|di|del|der|le|la)$/i.test(w));
@@ -119,6 +121,7 @@ window.TCImport = (() => {
     const cjk = text.slice(0, 400).match(/[\p{Script=Han}]{2,4}/u);
     if (cjk && out.name && !/\p{Script=Han}/u.test(out.name)) out.altName = cjk[0];
     guessFromText(text.slice(0, 4000), out);
+    doc.destroy();
     return finish(out);
   }
 

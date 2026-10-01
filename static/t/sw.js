@@ -1,40 +1,58 @@
-// Keeps the scan page usable with no signal: serve the last copy of the page,
-// scripts, fonts and photos instantly, and refresh them in the background.
+// Keeps the scan page usable with no signal.
+// - This site's own files: try the network first (so updates arrive whole, never
+//   half old and half new); fall back to the saved copy after 3 s or when offline.
+// - Libraries, fonts and uploaded photos never change at a given URL, so the saved
+//   copy is used straight away.
 // Card data itself is cached by tapcard.js (localStorage), not here.
-const CACHE = 'tapcard-v2';
-const CORE = ['./', './qr.html', './tapcard.js', './tapcard.css', './config.js',
+const CACHE = 'tapcard-v3';
+const CORE = ['./', './qr.html', './config.js?v=4', './tapcard.js?v=4', './tapcard.css?v=4', './qr.js?v=4', './qr.css?v=4',
   'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'];
 
+// The site's own files are stored without their ?v= so one saved copy serves every version link.
+const keyFor = u => { const url = new URL(u, self.location); return url.origin === self.location.origin ? url.origin + url.pathname : url.href; };
+
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).catch(() => {}).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE)
+    .then(c => Promise.all(CORE.map(u => fetch(u).then(res => res.ok && c.put(keyFor(u), res)).catch(() => {}))))
+    .then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    .then(keys => Promise.all(keys.filter(k => k.startsWith('tapcard-') && k !== CACHE).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 
-function cacheable(url) {
-  if (url.origin === self.location.origin) return url.pathname.startsWith(new URL('./', self.location).pathname);
-  return url.host === 'cdnjs.cloudflare.com' || url.host === 'fonts.googleapis.com' ||
-    url.host === 'fonts.gstatic.com' || url.pathname.includes('/storage/v1/object/public/');
+const SCOPE = new URL('./', self.location).pathname;
+const ownFile = url => url.origin === self.location.origin && url.pathname.startsWith(SCOPE);
+const fixedFile = url => url.host === 'cdnjs.cloudflare.com' || url.host === 'fonts.googleapis.com' ||
+  url.host === 'fonts.gstatic.com' || url.pathname.includes('/storage/v1/object/public/');
+
+function save(cache, key, res) {
+  if (res && (res.ok || res.type === 'opaque')) cache.put(key, res.clone());
+  return res;
 }
 
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (!cacheable(url)) return;
-  // Query strings (?u=…) all share one cached page shell.
-  const key = url.origin === self.location.origin ? url.origin + url.pathname : req;
-  e.respondWith(caches.open(CACHE).then(async cache => {
-    const hit = await cache.match(key);
-    const fresh = fetch(req).then(res => {
-      if (res.ok || res.type === 'opaque') cache.put(key, res.clone());
-      return res;
-    }).catch(() => hit || Response.error());
-    if (hit) { e.waitUntil(fresh); return hit; }
-    return fresh;
-  }));
+
+  if (ownFile(url)) {
+    // Query strings (?alex) all share one saved page.
+    const key = url.origin + url.pathname;
+    e.respondWith(caches.open(CACHE).then(async cache => {
+      const net = fetch(req).then(res => save(cache, key, res));
+      net.catch(() => {});
+      const slow = new Promise(r => setTimeout(r, 3000)).then(() => cache.match(key)).then(hit => hit || net);
+      try {
+        return (await Promise.race([net, slow])) || Response.error();
+      } catch (err) {
+        return (await cache.match(key)) || Response.error();
+      }
+    }));
+  } else if (fixedFile(url)) {
+    e.respondWith(caches.open(CACHE).then(async cache =>
+      (await cache.match(req)) || fetch(req).then(res => save(cache, req, res))));
+  }
 });

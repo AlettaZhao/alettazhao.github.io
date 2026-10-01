@@ -62,7 +62,7 @@ window.TC = (() => {
     for (const c of ['bad_invite', 'slug_taken', 'bad_token', 'storage_full']) if (m.includes(c)) return c;
     if (/cards_slug_check/.test(m)) return 'bad_slug';
     if (/size|too large|exceeded|413/i.test(m)) return 'too_large';
-    if (/mime|type/i.test(m)) return 'bad_type';
+    if (/mime type|InvalidMimeType|invalid_mime/i.test(m)) return 'bad_type';
     return 'network';
   }
   const fail = e => { const err = new Error(errCode(e)); err.detail = e; throw err; };
@@ -259,9 +259,9 @@ window.TC = (() => {
     if (d.altName) { y += 80; ctx.font = '500 46px Inter, "Microsoft YaHei", "PingFang SC", sans-serif'; ctx.fillText(d.altName, W / 2, y); }
     const line = [d.role, d.affiliation].filter(Boolean).join(' · ');
     if (line) { y += 76; fit(line, '400 #px Inter, system-ui, sans-serif', 42, W - 140); ctx.fillText(line, W / 2, y); }
-    y += 110; ctx.fillStyle = hexOk(d.accent); ctx.font = '600 38px Inter, system-ui, sans-serif';
+    y += 110; ctx.fillStyle = d.accent === '#1b1a17' ? INK : hexOk(d.accent);
     const tag = ('Scan to connect' + (d.event ? ' · ' + d.event : '')).toUpperCase();
-    ctx.letterSpacing = '4px'; ctx.fillText(tag, W / 2, y);
+    ctx.letterSpacing = '4px'; fit(tag, '600 #px Inter, system-ui, sans-serif', 38, W - 140); ctx.fillText(tag, W / 2, y);
     return c;
   }
 
@@ -322,10 +322,16 @@ window.TC = (() => {
     ${opts.via ? `<p class="tc-foot${a}"${delay()}>${opts.via === 'tap' ? 'You got here by tapping my phone.' : 'You got here by scanning my code.'} Hi 👋</p>` : ''}`;
   }
 
-  function applyAccent(el, accent) { el.style.setProperty('--accent', hexOk(accent)); }
+  // The near-black "Ink" accent is swapped for a light one in dark mode (see tapcard.css).
+  function applyAccent(el, accent) {
+    const hex = hexOk(accent);
+    el.style.setProperty('--accent-base', hex);
+    el.toggleAttribute('data-accent-ink', hex === '#1b1a17');
+  }
 
   return {
     live, BASE, ACCENTS, cardUrl, qrUrl, slugOk, slugify, slugFromQuery,
+    storageUrl: `${API}/storage/v1/object/public/${bucket}/`,
     getCard, cached, upload, checkInvite, fetchPage, createCard, updateCard, deleteCard,
     esc, href, hexOk, vcard, qrSvg, qrPng, wallpaper, saveCanvas, cardHtml, applyAccent
   };
