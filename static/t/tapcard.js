@@ -16,9 +16,18 @@ window.TC = (() => {
     { name: 'Ink', hex: '#1b1a17' }
   ];
 
-  const cardUrl = slug => `${BASE}?u=${encodeURIComponent(slug)}`;
-  const qrUrl = slug => `${BASE}qr.html?u=${encodeURIComponent(slug)}`;
-  const slugOk = s => /^[a-z0-9][a-z0-9-]{1,31}$/.test(s);
+  // Short links: …/t/?alex for the card, …/t/qr.html?alex for the scan page.
+  const cardUrl = slug => `${BASE}?${slug}`;
+  const qrUrl = slug => `${BASE}qr.html?${slug}`;
+  const RESERVED = ['edit', 'u', 'via', 'new', 'qr'];
+  const slugOk = s => /^[a-z0-9][a-z0-9-]{1,31}$/.test(s) && !RESERVED.includes(s);
+  // Reads the slug from ?alex, ?alex&via=tap, or the older ?u=alex.
+  function slugFromQuery(search) {
+    const P = new URLSearchParams(search);
+    if (P.get('u')) return P.get('u').toLowerCase();
+    for (const [k, v] of P) if (v === '' && !RESERVED.includes(k.toLowerCase())) return k.toLowerCase();
+    return '';
+  }
   const slugify = s => s.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
     .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 32);
 
@@ -73,6 +82,17 @@ window.TC = (() => {
     const path = `${slug}/${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
     await api(`/storage/v1/object/${bucket}/${path}`, { method: 'POST', headers: { 'Content-Type': contentType }, body: blob });
     return `${API}/storage/v1/object/public/${bucket}/${path}`;
+  }
+
+  // Optional add-on functions (import.sql). Missing ones resolve to null instead of failing.
+  async function checkInvite(invite) {
+    if (!live) return true;
+    try { return await rpc('check_invite', { p_invite: invite }); }
+    catch (e) { return null; } // add-on not installed (or offline): we'll find out at publish time
+  }
+  async function fetchPage(url, invite) {
+    if (!live) throw new Error('blocked');
+    return await rpc('fetch_page', { p_url: url, p_invite: invite });
   }
 
   async function createCard(slug, invite, data) {
@@ -305,8 +325,8 @@ window.TC = (() => {
   function applyAccent(el, accent) { el.style.setProperty('--accent', hexOk(accent)); }
 
   return {
-    live, BASE, ACCENTS, cardUrl, qrUrl, slugOk, slugify,
-    getCard, cached, upload, createCard, updateCard, deleteCard,
+    live, BASE, ACCENTS, cardUrl, qrUrl, slugOk, slugify, slugFromQuery,
+    getCard, cached, upload, checkInvite, fetchPage, createCard, updateCard, deleteCard,
     esc, href, hexOk, vcard, qrSvg, qrPng, wallpaper, saveCanvas, cardHtml, applyAccent
   };
 })();
