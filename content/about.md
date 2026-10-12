@@ -7,6 +7,7 @@ hideDate: true
 <section class="news-box" id="news">
 <div class="news-h">News</div>
 <div class="news-list">
+<div class="news-item"><span class="news-date">Oct 2026</span><span class="news-text">Our paper on olfactory context cues for skill transfer from MR to the real world received the <strong>Best Paper Award</strong> at IEEE ISMAR 2026 in Bari.</span></div>
 <div class="news-item"><span class="news-date">Jul 2026</span><span class="news-text">Serving as a reviewer for the IEEE ISMAR 2026 Demo Track.</span></div>
 <div class="news-item"><span class="news-date">Jun 2026</span><span class="news-text">Our paper on scent as a memory cue for carrying skills from MR into the real world is accepted to <em>IEEE TVCG</em>, to be presented at ISMAR 2026 in Bari.</span></div>
 <div class="news-item"><span class="news-date">Mar 2026</span><span class="news-text">Three workshop papers at IEEE VR 2026 in Daegu, where I presented our work on AI-augmented XR for cross-cultural co-creation.</span></div>
@@ -18,7 +19,7 @@ hideDate: true
 
 ### Multisensory Memory in Extended Reality
 <span class="research-project">Olfactory Cues in MR</span>  
-IEEE TVCG · ISMAR 2026 · <a href="/work/#olfactory-cues-in-mr">Video</a>
+IEEE TVCG · ISMAR 2026 Best Paper Award · <a href="/work/#olfactory-cues-in-mr">Video</a>
 
 Most XR training breaks at the moment the headset comes off: the sensory context of learning doesn't transfer to where the skill actually gets used. This study tests whether scent—the one modality that travels across both environments—can act as a memory anchor between them. Matched olfactory contexts produced significantly higher transfer accuracy and lower cognitive load than mismatched ones (n = 48, 2 × 2 between-subjects).
 
@@ -31,7 +32,7 @@ Scaling design research with AI usually means flattening the cultural texture yo
 ## Publications
 
 <div class="pub-list">
-<div class="pub-item">Lai, M., <strong>Zhao, X.</strong>, Li, W., Hajahmadi, S., Cascarano, P., &amp; Marfia, G. (2026). Olfactory context cues for procedural skill transfer from digital twin-based mixed reality learning to real-world execution. <em>IEEE Transactions on Visualization and Computer Graphics</em>. In press; to be presented at ISMAR 2026.</div>
+<div class="pub-item">Lai, M., <strong>Zhao, X.</strong>, Li, W., Hajahmadi, S., Cascarano, P., &amp; Marfia, G. (2026). Olfactory context cues for procedural skill transfer from digital twin-based mixed reality learning to real-world execution. <em>IEEE Transactions on Visualization and Computer Graphics</em>. In press; presented at ISMAR 2026. <span class="pub-award">Best Paper Award</span></div>
 <div class="pub-item"><strong>Zhao, X.</strong>, Lai, M., Li, W., Li, S., Cascarano, P., &amp; Marfia, G. (2026). Bridging the expressiveness gap in cross-cultural co-creation through AI-augmented extended reality. In <em>2026 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (VRW)</em> (pp. 519–523). IEEE. <a href="https://ieeexplore.ieee.org/abstract/document/11489846">Paper</a></div>
 <div class="pub-item">Li, W., Li, S., <strong>Zhao, X.</strong>, Lai, M., Cascarano, P., &amp; Marfia, G. (2026). Beyond fashion vocabulary: Spatial style navigation through dual-layer style-structural mapping in XR. In <em>2026 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (VRW)</em> (pp. 524–528). IEEE. <a href="https://ieeexplore.ieee.org/document/11489713">Paper</a></div>
 <div class="pub-item">Lai, M., <strong>Zhao, X.</strong>, Cascarano, P., &amp; Marfia, G. (2026). Beyond functionality: Olfactory cues for affective accessibility in collaborative social XR. In <em>2026 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (VRW)</em> (pp. 463–467). IEEE. <a href="https://ieeexplore.ieee.org/abstract/document/11489710">Paper</a></div>
@@ -57,6 +58,7 @@ Scaling design research with AI usually means flattening the cultural texture yo
 ## Selected Recognition
 
 <div class="recog-list">
+<div class="recog-item"><span class="recog-name">IEEE ISMAR 2026 Best Paper Award</span><span class="recog-qual">2026</span></div>
 <div class="recog-item"><span class="recog-name">HCII 2024 Best Paper Award <a class="recog-press" href="https://mp.weixin.qq.com/s/x8RgXt9_5spSNoIpZAJUAA" title="Beijing Institute of Technology, July 2024">Press (in Chinese)</a></span><span class="recog-qual">Top 1.4%</span></div>
 <div class="recog-item"><span class="recog-name">CSC Scholarship, PhD at Università di Bologna</span><span class="recog-qual">2025</span></div>
 <div class="recog-item"><span class="recog-name">National Scholarship, Beijing Institute of Technology</span><span class="recog-qual">Top 0.2%</span></div>

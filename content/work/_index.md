@@ -8,7 +8,7 @@ description: "Selected research systems and design projects."
 
 ## Research
 
-{{< work title="Olfactory Cues in MR" year="2026" tag="IEEE TVCG · ISMAR 2026" video="files/works/olfactory-mr.mp4" poster="images/works/olfactory-mr.jpg" role="Co-author — study design, data collection, methodology" >}}
+{{< work title="Olfactory Cues in MR" year="2026" tag="IEEE ISMAR 2026 Best Paper Award<br>Published in IEEE TVCG" video="files/works/olfactory-mr.mp4" poster="images/works/olfactory-mr.jpg" role="Co-author — study design, data collection, methodology" >}}
 Participants learn a procedural skill in a digital-twin mixed reality environment, then perform it in the real world. We test whether a matching scent in both settings works as a memory anchor that carries the skill across.
 {{< /work >}}
 
